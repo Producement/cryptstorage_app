@@ -1,4 +1,4 @@
-package com.example.cryptstorage_app
+package com.producement.cryptstorage
 
 import io.flutter.embedding.android.FlutterActivity
 

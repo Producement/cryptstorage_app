@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.cryptstorage_app">
+    package="com.producement.cryptstorage">
    <application
-        android:label="cryptstorage_app"
+        android:label="cryptstorage"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
