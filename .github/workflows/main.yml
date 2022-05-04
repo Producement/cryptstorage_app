@@ -39,7 +39,17 @@ jobs:
       with:
         channel: 'stable'
         cache: true
-    - run: flutter doctor -v
     - run: flutter pub get
     - run: flutter build apk
     - run: flutter build appbundle
+   ios:
+     runs-on: macos-latest
+     steps:
+     - uses: actions/checkout@v3
+     - uses: subosito/flutter-action@v2
+       with:
+         channel: 'stable'
+         cache: true
+         architecture: x64
+     - run: flutter pub get
+     - run: flutter build ios --release --no-codesign
