@@ -43,8 +43,8 @@ android {
 
     defaultConfig {
         applicationId "com.producement.cryptstorage"
-        minSdkVersion localProperties.getProperty('flutter.minSdkVersion').toInteger()
-        targetSdkVersion localProperties.getProperty('flutter.targetSdkVersion').toInteger()
+        minSdkVersion localProperties.getProperty('flutter.minSdkVersion', '19').toInteger()
+        targetSdkVersion localProperties.getProperty('flutter.targetSdkVersion', '30').toInteger()
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
