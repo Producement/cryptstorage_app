@@ -1,0 +1,35 @@
+PODS:
+  - Flutter (1.0.0)
+  - openpgp (0.6.0):
+    - Flutter
+  - YubiKit (4.1.0)
+  - yubikit_flutter (0.0.5):
+    - Flutter
+    - YubiKit (~> 4.1.0)
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - openpgp (from `.symlinks/plugins/openpgp/ios`)
+  - yubikit_flutter (from `.symlinks/plugins/yubikit_flutter/ios`)
+
+SPEC REPOS:
+  trunk:
+    - YubiKit
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  openpgp:
+    :path: ".symlinks/plugins/openpgp/ios"
+  yubikit_flutter:
+    :path: ".symlinks/plugins/yubikit_flutter/ios"
+
+SPEC CHECKSUMS:
+  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+  openpgp: e701ea849d81de83613bf49ea1cf9ea21846ac15
+  YubiKit: e6312b7acb2058ce78f35ef6755489f6c03e562e
+  yubikit_flutter: b71791b068f9618c26dc380a3a3dae80e942f5a7
+
+PODFILE CHECKSUM: 775997f741c536251164e3eacf6e34abf2eb7a17
+
+COCOAPODS: 1.11.3
