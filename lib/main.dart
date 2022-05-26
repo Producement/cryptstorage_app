@@ -7,7 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:yubikit_flutter/yubikit_flutter.dart';
 
-import 'pages/onboarding.dart';
+import 'app.dart';
 
 void setup(PinModel pinModel) {
   const session = YubikitFlutterSmartCard();
@@ -29,22 +29,4 @@ void main() {
       child: const App(),
     ),
   ));
-}
-
-class App extends StatelessWidget {
-  const App({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    var textTheme = Typography.whiteCupertino;
-    return MaterialApp(
-      title: 'Yubidrive',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        textTheme: textTheme.copyWith(
-            headline3: textTheme.headline3?.copyWith(color: Colors.white)),
-      ),
-      home: const Onboarding(),
-    );
-  }
 }
