@@ -6,6 +6,7 @@ class ExclamationImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SvgPicture.asset('assets/images/exclamation.svg', semanticsLabel: 'Exclamation');
+    return SvgPicture.asset('assets/images/exclamation.svg',
+        semanticsLabel: 'Exclamation');
   }
 }
