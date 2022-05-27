@@ -1,5 +1,4 @@
-import 'package:age_yubikey_pgp/interface.dart';
-import 'package:age_yubikey_pgp/plugin.dart';
+import 'package:age_yubikey_pgp/age_yubikey_pgp.dart';
 import 'package:cryptstorage/crypto/key_model.dart';
 import 'package:cryptstorage/crypto/pin_model.dart';
 import 'package:cryptstorage/images/no_key.dart';
@@ -21,10 +20,10 @@ class Generate extends StatelessWidget {
   Widget build(BuildContext context) {
     final keyModel = context.read<KeyModel>();
     var text = 'No keys detected';
-    if (keyModel.signingPublicKey == null) {
-      text = 'No signing key detected';
-    } else if (keyModel.getRecipients.isEmpty) {
+    if (keyModel.signingPublicKey != null) {
       text = 'No encryption key detected';
+    } else if (keyModel.getRecipients.isNotEmpty) {
+      text = 'No signing key detected';
     }
     final pinModel = context.read<PinModel>();
     return PageWidget(
@@ -51,9 +50,9 @@ class Generate extends StatelessWidget {
             ),
           ),
           Button(
-              title: 'Yes',
+              title: 'Generate!',
               onPressed: () async {
-                final interface = GetIt.instance.get<AgeYubikeyPGPInterface>();
+                final interface = GetIt.instance.get<YubikitOpenPGP>();
                 if (keyModel.signingPublicKey == null) {
                   final signingPublicKey = await interface.generateECKey(
                       KeySlot.signature, ECCurve.ed25519);
@@ -61,8 +60,7 @@ class Generate extends StatelessWidget {
                 }
                 if (keyModel.getRecipients.isEmpty) {
                   final encryptionPublicKey =
-                      await YubikeyPgpX2559AgePlugin.generate(
-                          GetIt.instance.get<AgeYubikeyPGPInterface>());
+                      await YubikeyPgpX2559AgePlugin.generate(interface);
                   keyModel.addRecipient(encryptionPublicKey);
                 }
               }),

@@ -8,7 +8,7 @@ class Heading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 50, top: 30, left: 20, right: 20),
+      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
       child: Text(title,
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.headline3),

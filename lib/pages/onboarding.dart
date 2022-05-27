@@ -1,5 +1,4 @@
-import 'package:age_yubikey_pgp/interface.dart';
-import 'package:age_yubikey_pgp/plugin.dart';
+import 'package:age_yubikey_pgp/age_yubikey_pgp.dart';
 import 'package:cryptstorage/crypto/key_model.dart';
 import 'package:cryptstorage/extensions.dart';
 import 'package:cryptstorage/ui/heading.dart';
@@ -30,10 +29,10 @@ class _OnboardingState extends State<Onboarding> {
 
   Future<void> fetchKeys() async {
     final keyModel = context.read<KeyModel>();
+    keyModel.reset();
     final interface = GetIt.instance.get<YubikitOpenPGP>();
     final signingPublicKey = await interface.getECPublicKey(KeySlot.signature);
-    final encryptionKey = await YubikeyPgpX2559AgePlugin.fromCard(
-        GetIt.instance.get<AgeYubikeyPGPInterface>());
+    final encryptionKey = await YubikeyPgpX2559AgePlugin.fromCard(interface);
     if (signingPublicKey != null) {
       keyModel.signingPublicKey = signingPublicKey;
     }

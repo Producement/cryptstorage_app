@@ -42,12 +42,12 @@ jobs:
     - run: flutter pub get
     - run: flutter build apk
     - run: flutter build appbundle
-    - name: 'Upload Artifact'
+    - name: 'Upload Android Artifact'
       uses: actions/upload-artifact@v3
       with:
-        name: apk
+        name: yubidrive.apk
         path: build/app/outputs/flutter-apk/app-release.apk
-        retention-days: 5
+        retention-days: 7
   ios:
     runs-on: macos-latest
     steps:
@@ -59,3 +59,20 @@ jobs:
         architecture: x64
     - run: flutter pub get
     - run: flutter build ios --release --no-codesign
+    - name: 'Upload iOS Artifact'
+      uses: actions/upload-artifact@v3
+      with:
+        name: Yubidrive.app
+        path: /Users/runner/work/cryptstorage_app/cryptstorage_app/build/ios/iphoneos/Runner.app
+        retention-days: 7
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create the Mattermost Message
+      run: |
+        echo "{\"text\":\"Build completed. [Get APK]($RUN_URL). :tada:\"}" > mattermost.json
+      env:
+        RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    - uses: mattermost/action-mattermost-notify@master
+      env:
+        MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}

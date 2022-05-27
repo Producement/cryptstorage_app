@@ -23,4 +23,10 @@ class KeyModel extends ChangeNotifier {
 
   bool get isKeyInitialised =>
       _signingPublicKey != null && _encryptionRecipients.isNotEmpty;
+
+  void reset() {
+    _signingPublicKey = null;
+    _encryptionRecipients.clear();
+    notifyListeners();
+  }
 }
