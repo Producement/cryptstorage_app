@@ -1,6 +1,5 @@
 import 'package:cryptstorage/images/animated_lock.dart';
 import 'package:cryptstorage/images/onboarding_image.dart';
-import 'package:cryptstorage/model/key_model.dart';
 import 'package:cryptstorage/onboarding/service.dart';
 import 'package:cryptstorage/ui/heading.dart';
 import 'package:cryptstorage/ui/page.dart';
