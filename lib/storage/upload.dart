@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_it_mixin/get_it_mixin.dart';
 
 import '../images/exclamation.dart';
 import '../ui/body.dart';
@@ -6,8 +7,8 @@ import '../ui/button.dart';
 import '../ui/heading.dart';
 import '../ui/page.dart';
 
-class Upload extends StatelessWidget {
-  const Upload({Key? key}) : super(key: key);
+class Upload extends StatelessWidget with GetItMixin {
+  Upload({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

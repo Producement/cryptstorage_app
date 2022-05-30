@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:yubikit_flutter/yubikit_flutter.dart';
-// ignore: depend_on_referenced_packages
-import 'package:yubikit_openpgp/smartcard/pin_provider.dart';
 
 class PinModel extends ChangeNotifier implements PinProvider {
   String _pin = YubikitOpenPGP.defaultPin,
       _adminPin = YubikitOpenPGP.defaultAdminPin;
+  int _remainingAdminPinTries = 0;
 
   set pin(String pin) {
     _pin = pin;
@@ -28,4 +27,11 @@ class PinModel extends ChangeNotifier implements PinProvider {
     _adminPin = YubikitOpenPGP.defaultAdminPin;
     notifyListeners();
   }
+
+  set remainingPinTries(int tries) {
+    _remainingAdminPinTries = tries;
+    notifyListeners();
+  }
+
+  int get remainingAdminPinTries => _remainingAdminPinTries;
 }

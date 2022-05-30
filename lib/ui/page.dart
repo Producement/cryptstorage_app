@@ -1,15 +1,19 @@
+import 'package:cryptstorage/model/key_model.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:yubikit_flutter/yubikit_flutter.dart';
 
-class PageWidget extends StatelessWidget {
+import '../navigation.dart';
+
+class PageWidget extends StatelessWidget with GetItMixin {
   final Widget child;
 
-  const PageWidget({Key? key, required this.child}) : super(key: key);
+  PageWidget({Key? key, required this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -23,11 +27,18 @@ class PageWidget extends StatelessWidget {
                     value: 0,
                     child: Text('Reset token'),
                   ),
+                  const PopupMenuItem<int>(
+                    value: 1,
+                    child: Text('Use other token'),
+                  ),
                 ];
               },
               onSelected: (value) async {
                 if (value == 0) {
-                  await GetIt.instance.get<YubikitOpenPGP>().reset();
+                  await get<YubikitOpenPGP>().reset();
+                } else if (value == 1) {
+                  get<KeyModel>().reset();
+                  await get<Navigation>().backToApp();
                 }
               }),
         ],
