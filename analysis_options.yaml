@@ -14,6 +14,9 @@ linter:
    - prefer_single_quotes
    - unawaited_futures
    - always_declare_return_types
+analyzer:
+  exclude:
+    - "lib/generated/**"
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

@@ -14,7 +14,6 @@ class Onboarding extends StatelessWidget with GetItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final onboardingService = get<OnboardingService>();
     return PageWidget(
       child: Center(
           child: Column(
@@ -28,7 +27,8 @@ class Onboarding extends StatelessWidget with GetItMixin {
               child: Button(
                 title: 'Continue',
                 onPressed: () async {
-                  final initialised = await onboardingService.fetchKeyInfo();
+                  final initialised =
+                      await get<OnboardingService>().fetchKeyInfo();
                   if (initialised) {
                     await get<Navigation>().goToRemoveToken();
                   } else {

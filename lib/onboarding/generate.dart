@@ -40,7 +40,7 @@ class _GenerateState extends State<Generate> with GetItStateMixin<Generate> {
   Widget build(BuildContext context) {
     final keyModel = get<KeyModel>();
     var text = 'No keys detected';
-    if (keyModel.signingPublicKey != null) {
+    if (keyModel.signaturePublicKey != null) {
       text = 'No encryption key detected';
     } else if (keyModel.getRecipients.isNotEmpty) {
       text = 'No signing key detected';
@@ -80,6 +80,11 @@ class _GenerateState extends State<Generate> with GetItStateMixin<Generate> {
                 } on SmartCardException catch (e) {
                   setState(() {
                     _errorText = e.getError().name;
+                  });
+                  final tries =
+                      await get<YubikitOpenPGP>().getRemainingPinTries();
+                  setState(() {
+                    _adminPinTries = tries.admin;
                   });
                 }
               }),

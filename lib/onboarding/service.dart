@@ -1,19 +1,23 @@
 import 'package:age_yubikey_pgp/age_yubikey_pgp.dart';
 import 'package:cryptstorage/model/key_model.dart';
+import 'package:get_it/get_it.dart';
 import 'package:yubikit_flutter/yubikit_flutter.dart';
 
 class OnboardingService {
   final YubikitOpenPGP _interface;
   final KeyModel _keyModel;
 
-  const OnboardingService(this._interface, this._keyModel);
+  OnboardingService({YubikitOpenPGP? interface, KeyModel? keyModel})
+      : _interface = interface ?? GetIt.I.get(),
+        _keyModel = keyModel ?? GetIt.I.get();
 
   Future<bool> fetchKeyInfo() async {
     _keyModel.reset();
-    final signingPublicKey = await _interface.getECPublicKey(KeySlot.signature);
+    final signaturePublicKey =
+        await _interface.getECPublicKey(KeySlot.signature);
     final encryptionKey = await YubikeyPgpX2559AgePlugin.fromCard(_interface);
-    if (signingPublicKey != null) {
-      _keyModel.signingPublicKey = signingPublicKey;
+    if (signaturePublicKey != null) {
+      _keyModel.signaturePublicKey = signaturePublicKey;
     }
     if (encryptionKey != null) {
       _keyModel.addRecipient(encryptionKey);
@@ -22,10 +26,10 @@ class OnboardingService {
   }
 
   Future<bool> generate() async {
-    if (_keyModel.signingPublicKey == null) {
+    if (_keyModel.signaturePublicKey == null) {
       final signingPublicKey =
           await _interface.generateECKey(KeySlot.signature, ECCurve.ed25519);
-      _keyModel.signingPublicKey = signingPublicKey;
+      _keyModel.signaturePublicKey = signingPublicKey;
     }
     if (_keyModel.getRecipients.isEmpty) {
       final encryptionPublicKey =

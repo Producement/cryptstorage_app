@@ -3,19 +3,20 @@ import 'dart:typed_data';
 
 import 'package:dage/dage.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class KeyModel extends ChangeNotifier {
-  static const signingPublicKeyPref = 'signingPublicKey';
+  static const signaturePublicKeyPref = 'signaturePublicKey';
   static const encryptionRecipientsPref = 'encryptionRecipients';
-  Uint8List? _signingPublicKey;
+  Uint8List? _signaturePublicKey;
   List<AgeRecipient> _encryptionRecipients = [];
   final SharedPreferences _prefs;
 
-  KeyModel(this._prefs) {
-    final signingPublicKey = _prefs.getString(signingPublicKeyPref);
-    if (signingPublicKey != null) {
-      _signingPublicKey = base64Decode(signingPublicKey);
+  KeyModel({SharedPreferences? prefs}) : _prefs = prefs ?? GetIt.I.get() {
+    final signaturePublicKey = _prefs.getString(signaturePublicKeyPref);
+    if (signaturePublicKey != null) {
+      _signaturePublicKey = base64Decode(signaturePublicKey);
     }
     _encryptionRecipients = _prefs
             .getStringList(encryptionRecipientsPref)
@@ -24,17 +25,18 @@ class KeyModel extends ChangeNotifier {
         [];
   }
 
-  set signingPublicKey(Uint8List? signingPublicKey) {
-    _signingPublicKey = signingPublicKey;
-    if (signingPublicKey != null) {
-      _prefs.setString(signingPublicKeyPref, base64Encode(signingPublicKey));
+  set signaturePublicKey(Uint8List? signaturePublicKey) {
+    _signaturePublicKey = signaturePublicKey;
+    if (signaturePublicKey != null) {
+      _prefs.setString(
+          signaturePublicKeyPref, base64Encode(signaturePublicKey));
     } else {
-      _prefs.remove(signingPublicKeyPref);
+      _prefs.remove(signaturePublicKeyPref);
     }
     notifyListeners();
   }
 
-  Uint8List? get signingPublicKey => _signingPublicKey;
+  Uint8List? get signaturePublicKey => _signaturePublicKey;
 
   void addRecipient(AgeRecipient recipient) {
     _encryptionRecipients.add(recipient);
@@ -49,10 +51,10 @@ class KeyModel extends ChangeNotifier {
   List<AgeRecipient> get getRecipients => _encryptionRecipients;
 
   bool get isKeyInitialised =>
-      _signingPublicKey != null && _encryptionRecipients.isNotEmpty;
+      _signaturePublicKey != null && _encryptionRecipients.isNotEmpty;
 
   void reset() {
-    _signingPublicKey = null;
+    _signaturePublicKey = null;
     _encryptionRecipients.clear();
     notifyListeners();
   }
