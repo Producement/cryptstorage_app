@@ -1,7 +1,8 @@
 import 'package:cryptstorage/model/key_model.dart';
+import 'package:cryptstorage/smartcard/smartcard_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
-import 'package:yubikit_flutter/yubikit_flutter.dart';
 
 import '../navigation.dart';
 
@@ -12,6 +13,8 @@ class PageWidget extends StatelessWidget with GetItMixin {
 
   @override
   Widget build(BuildContext context) {
+    final style =
+        Theme.of(context).textTheme.subtitle1?.copyWith(color: Colors.black);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.black,
@@ -20,25 +23,36 @@ class PageWidget extends StatelessWidget with GetItMixin {
         actions: [
           PopupMenuButton(
               icon: const Icon(Icons.menu),
-              color: Colors.black,
+              color: Colors.white,
               itemBuilder: (context) {
-                return [
-                  const PopupMenuItem<int>(
+                return <PopupMenuEntry<int>>[
+                  PopupMenuItem<int>(
+                    textStyle: style,
                     value: 0,
-                    child: Text('Reset token'),
+                    child: const Text('Reset token'),
                   ),
-                  const PopupMenuItem<int>(
+                  PopupMenuItem<int>(
+                    textStyle: style,
                     value: 1,
-                    child: Text('Use other token'),
+                    child: const Text('Use other token'),
                   ),
+                  if (kDebugMode) ...[
+                    CheckedPopupMenuItem<int>(
+                      value: 2,
+                      checked: get<SmartCardService>().isMock(),
+                      child: Text('Use mock', style: style),
+                    )
+                  ]
                 ];
               },
               onSelected: (value) async {
                 if (value == 0) {
-                  await get<YubikitOpenPGP>().reset();
+                  await get<SmartCardService>().reset();
                 } else if (value == 1) {
                   get<KeyModel>().reset();
                   await get<Navigation>().backToApp();
+                } else if (value == 2) {
+                  await get<SmartCardService>().toggleMock();
                 }
               }),
         ],

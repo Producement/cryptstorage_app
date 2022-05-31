@@ -4,19 +4,19 @@ import 'dart:typed_data';
 import 'package:cryptstorage/api/token_service.dart';
 import 'package:cryptstorage/generated/openapi.swagger.dart';
 import 'package:cryptstorage/injection.dart';
+import 'package:cryptstorage/smartcard/smartcard_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:yubikit_flutter/yubikit_flutter.dart';
 
 import 'mock_client.dart';
 import 'token_service.mocks.dart';
 
-@GenerateMocks([YubikitOpenPGP])
+@GenerateMocks([SmartCardService])
 void main() {
-  final interfaceMock = MockYubikitOpenPGP();
+  final interfaceMock = MockSmartCardService();
   final tokenService = TokenService(
-      interface: interfaceMock,
+      smartCardService: interfaceMock,
       openApi: Openapi.create(client: createClient(client: mockClient)));
 
   test('signs token', () async {

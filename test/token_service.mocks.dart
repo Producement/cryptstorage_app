@@ -5,12 +5,9 @@
 import 'dart:async' as _i4;
 import 'dart:typed_data' as _i5;
 
+import 'package:cryptstorage/smartcard/smartcard_service.dart' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:tuple/tuple.dart' as _i2;
-import 'package:yubikit_openpgp/curve.dart' as _i7;
-import 'package:yubikit_openpgp/keyslot.dart' as _i6;
-import 'package:yubikit_openpgp/touch_mode.dart' as _i8;
-import 'package:yubikit_openpgp/yubikit_openpgp.dart' as _i3;
+import 'package:yubikit_flutter/yubikit_flutter.dart' as _i2;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -22,30 +19,39 @@ import 'package:yubikit_openpgp/yubikit_openpgp.dart' as _i3;
 // ignore_for_file: unnecessary_parenthesis
 // ignore_for_file: camel_case_types
 
-class _FakeTuple2_0<T1, T2> extends _i1.Fake implements _i2.Tuple2<T1, T2> {}
+class _FakeYubikitOpenPGP_0 extends _i1.Fake implements _i2.YubikitOpenPGP {}
 
-class _FakeTuple3_1<T1, T2, T3> extends _i1.Fake
-    implements _i2.Tuple3<T1, T2, T3> {}
+class _FakePinRetries_1 extends _i1.Fake implements _i2.PinRetries {}
 
-class _FakePinRetries_2 extends _i1.Fake implements _i3.PinRetries {}
-
-/// A class which mocks [YubikitOpenPGP].
+/// A class which mocks [SmartCardService].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockYubikitOpenPGP extends _i1.Mock implements _i3.YubikitOpenPGP {
-  MockYubikitOpenPGP() {
+class MockSmartCardService extends _i1.Mock implements _i3.SmartCardService {
+  MockSmartCardService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
+  _i2.YubikitOpenPGP getService() =>
+      (super.noSuchMethod(Invocation.method(#getService, []),
+          returnValue: _FakeYubikitOpenPGP_0()) as _i2.YubikitOpenPGP);
+  @override
+  _i4.Future<void> toggleMock() =>
+      (super.noSuchMethod(Invocation.method(#toggleMock, []),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i4.Future<void>);
+  @override
+  bool isMock() =>
+      (super.noSuchMethod(Invocation.method(#isMock, []), returnValue: false)
+          as bool);
+  @override
   _i4.Future<_i5.Uint8List> generateECKey(
-          _i6.KeySlot? keySlot, _i7.ECCurve? curve, [int? timestamp]) =>
-      (super.noSuchMethod(
-              Invocation.method(#generateECKey, [keySlot, curve, timestamp]),
+          _i2.KeySlot? keySlot, _i2.ECCurve? curve) =>
+      (super.noSuchMethod(Invocation.method(#generateECKey, [keySlot, curve]),
               returnValue: Future<_i5.Uint8List>.value(_i5.Uint8List(0)))
           as _i4.Future<_i5.Uint8List>);
   @override
-  _i4.Future<_i5.Uint8List?> getECPublicKey(_i6.KeySlot? keySlot) =>
+  _i4.Future<_i5.Uint8List?> getECPublicKey(_i2.KeySlot? keySlot) =>
       (super.noSuchMethod(Invocation.method(#getECPublicKey, [keySlot]),
               returnValue: Future<_i5.Uint8List?>.value())
           as _i4.Future<_i5.Uint8List?>);
@@ -55,43 +61,10 @@ class MockYubikitOpenPGP extends _i1.Mock implements _i3.YubikitOpenPGP {
               returnValue: Future<_i5.Uint8List>.value(_i5.Uint8List(0)))
           as _i4.Future<_i5.Uint8List>);
   @override
-  _i4.Future<_i5.Uint8List> ecSharedSecret(_i5.Uint8List? publicKey) =>
-      (super.noSuchMethod(Invocation.method(#ecSharedSecret, [publicKey]),
-              returnValue: Future<_i5.Uint8List>.value(_i5.Uint8List(0)))
-          as _i4.Future<_i5.Uint8List>);
-  @override
-  _i4.Future<_i8.TouchMode> getTouch(_i6.KeySlot? keySlot) =>
-      (super.noSuchMethod(Invocation.method(#getTouch, [keySlot]),
-              returnValue: Future<_i8.TouchMode>.value(_i8.TouchMode.off))
-          as _i4.Future<_i8.TouchMode>);
-  @override
-  _i4.Future<void> setTouch(_i6.KeySlot? keySlot, _i8.TouchMode? mode) =>
-      (super.noSuchMethod(Invocation.method(#setTouch, [keySlot, mode]),
-          returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i4.Future<void>);
-  @override
-  _i4.Future<_i2.Tuple2<int, int>> getOpenPGPVersion() =>
-      (super.noSuchMethod(Invocation.method(#getOpenPGPVersion, []),
-              returnValue:
-                  Future<_i2.Tuple2<int, int>>.value(_FakeTuple2_0<int, int>()))
-          as _i4.Future<_i2.Tuple2<int, int>>);
-  @override
-  _i4.Future<_i2.Tuple3<int, int, int>> getApplicationVersion() =>
-      (super.noSuchMethod(Invocation.method(#getApplicationVersion, []),
-              returnValue: Future<_i2.Tuple3<int, int, int>>.value(
-                  _FakeTuple3_1<int, int, int>()))
-          as _i4.Future<_i2.Tuple3<int, int, int>>);
-  @override
-  _i4.Future<_i3.PinRetries> getRemainingPinTries() =>
+  _i4.Future<_i2.PinRetries> getRemainingPinTries() =>
       (super.noSuchMethod(Invocation.method(#getRemainingPinTries, []),
-              returnValue: Future<_i3.PinRetries>.value(_FakePinRetries_2()))
-          as _i4.Future<_i3.PinRetries>);
-  @override
-  _i4.Future<void> setPinRetries(int? pw1Tries, int? pw2Tries, int? pw3Tries) =>
-      (super.noSuchMethod(
-          Invocation.method(#setPinRetries, [pw1Tries, pw2Tries, pw3Tries]),
-          returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i4.Future<void>);
+              returnValue: Future<_i2.PinRetries>.value(_FakePinRetries_1()))
+          as _i4.Future<_i2.PinRetries>);
   @override
   _i4.Future<void> reset() => (super.noSuchMethod(Invocation.method(#reset, []),
       returnValue: Future<void>.value(),

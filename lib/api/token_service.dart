@@ -2,16 +2,16 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cryptstorage/generated/openapi.swagger.dart';
+import 'package:cryptstorage/smartcard/smartcard_service.dart';
 import 'package:get_it/get_it.dart';
-import 'package:yubikit_flutter/yubikit_flutter.dart';
 
 class TokenService {
   final Openapi _openApi;
-  final YubikitOpenPGP _interface;
+  final SmartCardService _smartCardService;
 
-  TokenService({Openapi? openApi, YubikitOpenPGP? interface})
+  TokenService({Openapi? openApi, SmartCardService? smartCardService})
       : _openApi = openApi ?? GetIt.I.get(),
-        _interface = interface ?? GetIt.I.get();
+        _smartCardService = smartCardService ?? GetIt.I.get();
 
   Future<String> getSignedToken(Uint8List signaturePublicKey) async {
     final tokenToSign = await _openApi.tokenGet(
@@ -25,6 +25,6 @@ class TokenService {
   }
 
   Future<Uint8List> _signWithToken(List<int> message) async {
-    return await _interface.sign(Uint8List.fromList(message));
+    return await _smartCardService.sign(Uint8List.fromList(message));
   }
 }

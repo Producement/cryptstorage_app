@@ -1,11 +1,13 @@
 import 'package:chopper/chopper.dart';
 import 'package:cryptstorage/api/authentication_interceptor.dart';
 import 'package:cryptstorage/api/key_service.dart';
+import 'package:cryptstorage/smartcard/mock_yubikey.dart';
 import 'package:cryptstorage/model/key_model.dart';
 import 'package:cryptstorage/model/pin_model.dart';
 import 'package:cryptstorage/model/session_model.dart';
 import 'package:cryptstorage/navigation.dart';
 import 'package:cryptstorage/onboarding/service.dart';
+import 'package:cryptstorage/smartcard/smartcard_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
@@ -29,14 +31,19 @@ ChopperClient createClient(
 }
 
 Future<void> setupInjection() async {
-  getIt.registerSingleton(await SharedPreferences.getInstance());
+  await getIt.reset();
+  final prefs = await SharedPreferences.getInstance();
+  getIt.registerSingleton(prefs);
   getIt.registerSingleton(PinModel());
   getIt.registerSingleton(KeyModel());
   getIt.registerSingleton(SessionModel());
   getIt.registerSingleton(GlobalKey<NavigatorState>());
   getIt.registerSingleton(Navigation());
   getIt.registerSingleton(
+      MockYubikitOpenPGP(pinProvider: getIt.get<PinModel>()));
+  getIt.registerSingleton(
       YubikitFlutter.openPGP(pinProvider: getIt.get<PinModel>()));
+  getIt.registerSingleton(SmartCardService());
   // Services
   final publicClient = createClient();
   final tokenService =

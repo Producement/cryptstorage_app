@@ -9,6 +9,8 @@ PODS:
     - Flutter
     - FlutterMacOS
     - Sentry (~> 7.11.0)
+  - shared_preferences_ios (0.0.1):
+    - Flutter
   - YubiKit (4.1.0)
   - yubikit_flutter (0.0.5):
     - Flutter
@@ -18,6 +20,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - sentry_flutter (from `.symlinks/plugins/sentry_flutter/ios`)
+  - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
   - yubikit_flutter (from `.symlinks/plugins/yubikit_flutter/ios`)
 
 SPEC REPOS:
@@ -32,6 +35,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/package_info_plus/ios"
   sentry_flutter:
     :path: ".symlinks/plugins/sentry_flutter/ios"
+  shared_preferences_ios:
+    :path: ".symlinks/plugins/shared_preferences_ios/ios"
   yubikit_flutter:
     :path: ".symlinks/plugins/yubikit_flutter/ios"
 
@@ -40,6 +45,7 @@ SPEC CHECKSUMS:
   package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
   Sentry: 0c5cd63d714187b4a39c331c1f0eb04ba7868341
   sentry_flutter: efb3df2c203cd03aad255892a8d628a458656d14
+  shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
   YubiKit: e6312b7acb2058ce78f35ef6755489f6c03e562e
   yubikit_flutter: b71791b068f9618c26dc380a3a3dae80e942f5a7
 

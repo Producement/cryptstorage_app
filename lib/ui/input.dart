@@ -3,14 +3,16 @@ import 'package:flutter/material.dart';
 class Input extends StatelessWidget {
   final TextEditingController? controller;
   final ValueChanged<String>? onChanged;
-  final String hintText;
+  final String? hintText;
+  final String? labelText;
   final String? errorText;
 
   const Input(
       {Key? key,
       required this.onChanged,
-      required this.hintText,
+      this.hintText,
       this.errorText,
+      this.labelText,
       this.controller})
       : super(key: key);
 
@@ -25,6 +27,7 @@ class Input extends StatelessWidget {
         enableSuggestions: false,
         autocorrect: false,
         decoration: InputDecoration(
+          labelText: labelText,
           errorText: errorText,
           filled: true,
           fillColor: const Color(0xFF50524C),

@@ -50,6 +50,7 @@ dependencies:
   cryptography: ^2.0.5
   convert: ^3.0.2
   http: ^0.13.4
+  tuple: ^2.0.0
 
 
 dev_dependencies:

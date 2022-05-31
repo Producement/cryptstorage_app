@@ -12,15 +12,12 @@ class Navigation {
   Navigation({GlobalKey<NavigatorState>? state})
       : _state = state ?? GetIt.I.get();
 
-  Future<Object?> _push(WidgetBuilder builder) async =>
-      await _state.currentState?.push(MaterialPageRoute(builder: builder));
-
   Future<void> _replaceRoot(WidgetBuilder newRoot) async =>
       _state.currentState?.pushAndRemoveUntil(
           MaterialPageRoute(builder: newRoot), (route) => false);
 
   Future<void> goToGenerate() async {
-    await _push((_) => Generate());
+    await _replaceRoot((_) => Generate());
   }
 
   Future<void> goToUpload() async {
@@ -32,6 +29,6 @@ class Navigation {
   }
 
   Future<void> goToRemoveToken() async {
-    await _push((_) => RemoveToken());
+    await _replaceRoot((_) => RemoveToken());
   }
 }

@@ -2,6 +2,7 @@ import 'package:cryptstorage/images/no_key.dart';
 import 'package:cryptstorage/model/key_model.dart';
 import 'package:cryptstorage/model/pin_model.dart';
 import 'package:cryptstorage/onboarding/service.dart';
+import 'package:cryptstorage/smartcard/smartcard_service.dart';
 import 'package:cryptstorage/ui/input.dart';
 import 'package:cryptstorage/ui/page.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,7 @@ class _GenerateState extends State<Generate> with GetItStateMixin<Generate> {
   @override
   void initState() {
     super.initState();
-    get<YubikitOpenPGP>().getRemainingPinTries().then((tries) {
+    get<SmartCardService>().getRemainingPinTries().then((tries) {
       debugPrint(
           'Pin tries: pin ${tries.pin}, reset ${tries.reset}, admin ${tries.admin}');
       setState(() {
@@ -65,7 +66,7 @@ class _GenerateState extends State<Generate> with GetItStateMixin<Generate> {
                     onChanged: (text) {
                       get<PinModel>().adminPin = text;
                     },
-                    hintText: 'Admin PIN ($_adminPinTries tries left)'),
+                    labelText: 'Admin PIN ($_adminPinTries tries left)'),
               ],
             ),
           ),
@@ -82,7 +83,7 @@ class _GenerateState extends State<Generate> with GetItStateMixin<Generate> {
                     _errorText = e.getError().name;
                   });
                   final tries =
-                      await get<YubikitOpenPGP>().getRemainingPinTries();
+                      await get<SmartCardService>().getRemainingPinTries();
                   setState(() {
                     _adminPinTries = tries.admin;
                   });
