@@ -46,11 +46,12 @@ dependencies:
   # OpenAPI generation
   chopper: ^4.0.5
   json_annotation: ^4.4.0
-  dart_jsonwebtoken: ^2.4.1
+
   cryptography: ^2.0.5
   convert: ^3.0.2
   http: ^0.13.4
   tuple: ^2.0.0
+  logging: ^1.0.2
 
 
 dev_dependencies:

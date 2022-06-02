@@ -29,8 +29,8 @@ class AuthenticationInterceptor implements RequestInterceptor {
     }
     accessToken ??=
         await _tokenService.getSignedToken(_keyModel.signaturePublicKey!);
-    request.headers['Authorization'] = 'Bearer: $accessToken';
-    return request;
+    _sessionModel.accessToken = accessToken;
+    return applyHeader(request, 'Authorization', 'Bearer $accessToken');
   }
 
   String? verifiedToken(String accessToken) {

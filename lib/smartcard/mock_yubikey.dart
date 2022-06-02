@@ -1,20 +1,39 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tuple/tuple.dart';
 import 'package:yubikit_flutter/yubikit_flutter.dart';
 
 class MockYubikitOpenPGP implements YubikitOpenPGP {
+  static const mockSigningKeyPreference = 'mockSigningSeed';
+  static const mockEncryptionSeedPreference = 'mockEncryptionSeed';
   final PinProvider _pinProvider;
+  final SharedPreferences _preferences;
   static final signingAlgorithm = Ed25519();
   static final encryptionAlgorithm = X25519();
   SimpleKeyPair? _signingKeyPair;
   SimpleKeyPair? _encryptionKeyPair;
   int pinTries = 3, adminPinTries = 3;
 
-  MockYubikitOpenPGP({PinProvider? pinProvider})
-      : _pinProvider = pinProvider ?? GetIt.I.get();
+  MockYubikitOpenPGP({PinProvider? pinProvider, SharedPreferences? preferences})
+      : _pinProvider = pinProvider ?? GetIt.I.get(),
+        _preferences = preferences ?? GetIt.I.get() {
+    final signingSeed = _preferences.getString(mockSigningKeyPreference);
+    if (signingSeed != null) {
+      signingAlgorithm
+          .newKeyPairFromSeed(base64Decode(signingSeed))
+          .then((value) => _signingKeyPair = value);
+    }
+    final encryptionSeed = _preferences.getString(mockEncryptionSeedPreference);
+    if (encryptionSeed != null) {
+      encryptionAlgorithm
+          .newKeyPairFromSeed(base64Decode(encryptionSeed))
+          .then((value) => _encryptionKeyPair = value);
+    }
+  }
 
   void verifyAdminPin() {
     if (adminPinTries == 0) {
@@ -53,11 +72,19 @@ class MockYubikitOpenPGP implements YubikitOpenPGP {
       [int? timestamp]) async {
     verifyAdminPin();
     if (keySlot == KeySlot.encryption) {
-      _encryptionKeyPair = await encryptionAlgorithm.newKeyPair();
+      _encryptionKeyPair = await encryptionAlgorithm
+          .newKeyPairFromSeed(List.generate(32, (index) => 0x01));
+      final seed = await _encryptionKeyPair!.extractPrivateKeyBytes();
+      await _preferences.setString(
+          mockEncryptionSeedPreference, base64Encode(seed));
       return Uint8List.fromList(
           (await _encryptionKeyPair!.extractPublicKey()).bytes);
     } else if (keySlot == KeySlot.signature) {
-      _signingKeyPair = await signingAlgorithm.newKeyPair();
+      _signingKeyPair = await signingAlgorithm
+          .newKeyPairFromSeed(List.generate(32, (index) => 0x02));
+      final seed = await _signingKeyPair!.extractPrivateKeyBytes();
+      await _preferences.setString(
+          mockSigningKeyPreference, base64Encode(seed));
       return Uint8List.fromList(
           (await _signingKeyPair!.extractPublicKey()).bytes);
     }
@@ -110,6 +137,8 @@ class MockYubikitOpenPGP implements YubikitOpenPGP {
     adminPinTries = 3;
     _signingKeyPair = null;
     _encryptionKeyPair = null;
+    await _preferences.remove(mockEncryptionSeedPreference);
+    await _preferences.remove(mockSigningKeyPreference);
   }
 
   @override
@@ -123,9 +152,15 @@ class MockYubikitOpenPGP implements YubikitOpenPGP {
   }
 
   @override
-  Future<Uint8List> sign(Uint8List data) {
+  Future<Uint8List> sign(Uint8List data) async {
     verifyPin();
-
-    throw UnimplementedError();
+    if (_signingKeyPair == null) {
+      throw const SmartCardException(0x69, 0x85);
+    }
+    final sha512 = Sha512();
+    final digest = await sha512.hash(data);
+    final signature =
+        await signingAlgorithm.sign(digest.bytes, keyPair: _signingKeyPair!);
+    return Uint8List.fromList(signature.bytes);
   }
 }

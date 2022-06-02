@@ -15,13 +15,13 @@ class TokenService {
 
   Future<String> getSignedToken(Uint8List signaturePublicKey) async {
     final tokenToSign = await _openApi.tokenGet(
-        signaturePublicKey: base64Encode(signaturePublicKey));
+        signaturePublicKey: base64UrlEncode(signaturePublicKey).split('=')[0]);
     return await _sign(tokenToSign.body!.tokenToSign);
   }
 
   Future<String> _sign(String token) async {
     final signature = await _signWithToken(utf8.encode(token));
-    return '$token.${base64Url.encode(signature).split('=')[0]}';
+    return '$token.${base64UrlEncode(signature).split('=')[0]}';
   }
 
   Future<Uint8List> _signWithToken(List<int> message) async {

@@ -1,5 +1,6 @@
 import 'package:chopper/chopper.dart';
 import 'package:cryptstorage/api/authentication_interceptor.dart';
+import 'package:cryptstorage/api/file_service.dart';
 import 'package:cryptstorage/api/key_service.dart';
 import 'package:cryptstorage/smartcard/mock_yubikey.dart';
 import 'package:cryptstorage/model/key_model.dart';
@@ -45,13 +46,14 @@ Future<void> setupInjection() async {
       YubikitFlutter.openPGP(pinProvider: getIt.get<PinModel>()));
   getIt.registerSingleton(SmartCardService());
   // Services
-  final publicClient = createClient();
+  final publicClient = createClient(interceptors: [HttpLoggingInterceptor()]);
   final tokenService =
       TokenService(openApi: Openapi.create(client: publicClient));
   getIt.registerSingleton(tokenService);
-  final authenticatedClient =
-      createClient(interceptors: [AuthenticationInterceptor()]);
+  final authenticatedClient = createClient(
+      interceptors: [AuthenticationInterceptor(), HttpLoggingInterceptor()]);
   getIt.registerSingleton(Openapi.create(client: authenticatedClient));
   getIt.registerSingleton(OnboardingService());
   getIt.registerSingleton(KeyService());
+  getIt.registerSingleton(FileService());
 }
