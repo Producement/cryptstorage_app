@@ -14,8 +14,9 @@ class Files extends StatelessWidget with GetItMixin {
         return Card(
             child: ListTile(
           leading: const Icon(Icons.image),
-              title: Text(files[index].name, style: const TextStyle(color: Colors.black87)),
-              trailing: const Icon(Icons.delete),
+          title: Text(files[index].name,
+              style: const TextStyle(color: Colors.black87)),
+          trailing: const Icon(Icons.delete),
         ));
       },
     );

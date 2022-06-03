@@ -34,10 +34,10 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  yubikit_flutter: ^0.0.13
+  yubikit_flutter: ^0.0.16
   flutter_svg: ^1.0.3
   dage: ^1.0.4
-  age_yubikey_pgp: ^0.0.4
+  age_yubikey_pgp: ^0.0.5
   get_it: ^7.2.0
   get_it_mixin: ^3.1.4
   sentry_flutter: ^6.5.1
@@ -52,6 +52,7 @@ dependencies:
   http: ^0.13.4
   tuple: ^2.0.0
   logging: ^1.0.2
+  collection: ^1.16.0
 
 
 dev_dependencies:
@@ -118,3 +119,9 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+dependency_overrides:
+  swagger_dart_code_generator:
+    git:
+      url: git@github.com:Producement/swagger-dart-code-generator.git
+      ref: multipart

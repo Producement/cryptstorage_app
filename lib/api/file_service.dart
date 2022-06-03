@@ -12,4 +12,8 @@ class FileService {
   Future<List<ApiFile>> getFiles() async {
     return (await _openApi.filesGet()).body ?? [];
   }
+
+  Future<ApiFile> addFile(String fileName, List<int> file) async {
+    return (await _openApi.filesPost(filename: fileName, file: file)).body!;
+  }
 }

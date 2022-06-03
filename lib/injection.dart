@@ -1,3 +1,4 @@
+import 'package:age_yubikey_pgp/age_yubikey_pgp.dart';
 import 'package:chopper/chopper.dart';
 import 'package:cryptstorage/api/authentication_interceptor.dart';
 import 'package:cryptstorage/api/file_service.dart';
@@ -44,6 +45,7 @@ Future<void> setupInjection() async {
       MockYubikitOpenPGP(pinProvider: getIt.get<PinModel>()));
   getIt.registerSingleton(
       YubikitFlutter.openPGP(pinProvider: getIt.get<PinModel>()));
+  registerPlugin(getIt.get());
   getIt.registerSingleton(SmartCardService());
   // Services
   final publicClient = createClient(interceptors: [HttpLoggingInterceptor()]);
