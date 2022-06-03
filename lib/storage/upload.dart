@@ -20,7 +20,7 @@ class Upload extends StatelessWidget with GetItMixin {
     return PageWidget(
         child: Center(
       child: FutureBuilder<List<ApiFile>>(
-        future: get<FileService>().getFiles(),
+        future: _getFiles(),
         initialData: const [],
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -31,13 +31,18 @@ class Upload extends StatelessWidget with GetItMixin {
               snapshot.connectionState == ConnectionState.waiting) {
             return const Loader();
           }
-          if (snapshot.data?.isNotEmpty ?? false) {
-            return Files();
-          }
-          return const NoFiles();
+
+          return RefreshIndicator(
+              onRefresh: () => _getFiles(),
+              child:
+                  snapshot.data?.isEmpty ?? true ? const NoFiles() : Files());
         },
       ),
     ));
+  }
+
+  Future<List<ApiFile>> _getFiles() async {
+    return get<FileService>().getFiles();
   }
 }
 
@@ -48,20 +53,26 @@ class NoFiles extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: const <Widget>[
-            ExclamationImage(),
-            Heading(title: 'Folder is Empty'),
-            Body(text: 'Secure your files by uploading them here'),
-          ],
-        ),
-        Button(title: 'Upload', onPressed: () {}),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) => SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: const <Widget>[
+                      ExclamationImage(),
+                      Heading(title: 'Folder is Empty'),
+                      Body(text: 'Secure your files by uploading them here'),
+                    ],
+                  ),
+                  Button(title: 'Upload', onPressed: () {}),
+                ],
+              ))),
     );
   }
 }
