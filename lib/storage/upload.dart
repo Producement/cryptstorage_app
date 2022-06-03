@@ -35,7 +35,7 @@ class Upload extends StatelessWidget with GetItMixin {
           return RefreshIndicator(
               onRefresh: () => _getFiles(),
               child:
-                  snapshot.data?.isEmpty ?? true ? const NoFiles() : Files());
+                  snapshot.data?.isEmpty ?? true ? const NoFiles() : Files(snapshot.data!));
         },
       ),
     ));
