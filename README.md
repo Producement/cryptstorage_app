@@ -20,7 +20,7 @@ While you are free to choose your own IDE, we prefer working with [IntelliJ Idea
 Assuming you have successfully set up Flutter and your IDE, in order to run the project you must:
 
 1. AVD Manager - download and create a virtual device that you will use for emulation. Keep in mind that some dependencies in the future might depend on virtual device having Play Store installed
-2. API client - since we use [OpenAPI](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md) for server&client code generation, you are required to generate the client code. Luckily, you don't have to do it manually, there's a [script](etc/generate-api.sh) that does the job for you. One thing you must do is **make sure that backend and mobile projects are sibling folders**.
+2. API client - since we use [OpenAPI](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md) for server&client code generation, you are required to generate the client code. One thing you must do is **make sure that backend and mobile projects are sibling folders** and run `flutter pub run build_runner build --delete-conflicting-outputs`.
 3. Dependencies - make sure you ran `flutter pub get` to get all the dependencies from [pubspec.yaml](pubspec.yaml)
 
 At this moment, the Dart code should compile, and you should be able to run the application.
