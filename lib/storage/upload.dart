@@ -12,15 +12,28 @@ import '../ui/button.dart';
 import '../ui/error.dart' as ui;
 import '../ui/page.dart';
 
-class Upload extends StatelessWidget with GetItMixin {
+class Upload extends StatefulWidget with GetItStatefulWidgetMixin {
   Upload({Key? key}) : super(key: key);
+
+  @override
+  State<Upload> createState() => _UploadState();
+}
+
+class _UploadState extends State<Upload> with GetItStateMixin {
+  late Future<List<ApiFile>> _files;
+
+  @override
+  void initState() {
+    super.initState();
+    _files = _getFiles();
+  }
 
   @override
   Widget build(BuildContext context) {
     return PageWidget(
         child: Center(
       child: FutureBuilder<List<ApiFile>>(
-        future: _getFiles(),
+        future: _files,
         initialData: const [],
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -44,19 +57,26 @@ class Upload extends StatelessWidget with GetItMixin {
                   await get<FileService>()
                       .addFile(platformFile.name, file.readAsBytesSync());
                   debugPrint('file: $file');
+                  await _refreshFiles();
                 } else {
                   debugPrint('user cancelled the filepicker');
                 }
               });
 
           return RefreshIndicator(
-              onRefresh: () => _getFiles(),
+              onRefresh: _refreshFiles,
               child: snapshot.data?.isEmpty ?? true
                   ? NoFiles(button)
                   : Files(snapshot.data!, button));
         },
       ),
     ));
+  }
+
+  Future<void> _refreshFiles() async {
+    setState(() {
+      _files = _getFiles();
+    });
   }
 
   Future<List<ApiFile>> _getFiles() async {
