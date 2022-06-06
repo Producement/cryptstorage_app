@@ -53,6 +53,7 @@ dependencies:
   tuple: ^2.0.0
   logging: ^1.0.2
   collection: ^1.16.0
+  file_picker: ^4.6.1
 
 
 dev_dependencies:
