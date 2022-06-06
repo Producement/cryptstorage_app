@@ -32,11 +32,13 @@ class Upload extends StatelessWidget with GetItMixin {
             return const Loader();
           }
 
+          var button = Button(title: 'Upload', onPressed: () {});
+
           return RefreshIndicator(
               onRefresh: () => _getFiles(),
               child: snapshot.data?.isEmpty ?? true
-                  ? const NoFiles()
-                  : Files(snapshot.data!));
+                  ? NoFiles(button)
+                  : Files(snapshot.data!, button));
         },
       ),
     ));
@@ -44,36 +46,5 @@ class Upload extends StatelessWidget with GetItMixin {
 
   Future<List<ApiFile>> _getFiles() async {
     return get<FileService>().getFiles();
-  }
-}
-
-class NoFiles extends StatelessWidget {
-  const NoFiles({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) => SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: constraints.maxHeight),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: const <Widget>[
-                      ExclamationImage(),
-                      Heading(title: 'Folder is Empty'),
-                      Body(text: 'Secure your files by uploading them here'),
-                    ],
-                  ),
-                  Button(title: 'Upload', onPressed: () {}),
-                ],
-              ))),
-    );
   }
 }
