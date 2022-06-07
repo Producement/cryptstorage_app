@@ -56,7 +56,7 @@ class MockYubikitOpenPGP implements YubikitOpenPGP {
   }
 
   @override
-  Future<Uint8List> ecSharedSecret(Uint8List publicKey) async {
+  Future<Uint8List> ecSharedSecret(List<int> publicKey) async {
     verifyAdminPin();
     if (_encryptionKeyPair == null) {
       throw const SmartCardException(0x69, 0x85);
@@ -152,7 +152,7 @@ class MockYubikitOpenPGP implements YubikitOpenPGP {
   }
 
   @override
-  Future<Uint8List> sign(Uint8List data) async {
+  Future<Uint8List> sign(List<int> data) async {
     verifyPin();
     if (_signingKeyPair == null) {
       throw const SmartCardException(0x69, 0x85);
