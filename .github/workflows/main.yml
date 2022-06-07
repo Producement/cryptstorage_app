@@ -99,7 +99,7 @@ jobs:
          subdirectory: 'android'
   release:
     runs-on: linux
-    needs: [ios, android]
+    needs: [deploy_ios, deploy_apk]
     steps:
     - uses: actions/checkout@v3
     - name: Create Sentry release
