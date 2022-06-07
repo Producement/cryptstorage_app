@@ -21,6 +21,7 @@ class Upload extends StatefulWidget with GetItStatefulWidgetMixin {
 
 class _UploadState extends State<Upload> with GetItStateMixin {
   late Future<List<ApiFile>> _files;
+  bool _isUploading = false;
 
   @override
   void initState() {
@@ -54,8 +55,14 @@ class _UploadState extends State<Upload> with GetItStateMixin {
                 if (result != null) {
                   var platformFile = result.files.single;
                   File file = File(platformFile.path!);
+                  setState(() {
+                    _isUploading = true;
+                  });
                   await get<FileService>()
                       .addFile(platformFile.name, file.readAsBytesSync());
+                  setState(() {
+                    _isUploading = false;
+                  });
                   debugPrint('file: $file');
                   await _refreshFiles();
                 } else {
@@ -64,13 +71,20 @@ class _UploadState extends State<Upload> with GetItStateMixin {
               });
 
           return RefreshIndicator(
-              onRefresh: _refreshFiles,
-              child: snapshot.data?.isEmpty ?? true
-                  ? NoFiles(button)
-                  : Files(snapshot.data!, button));
+            onRefresh: _refreshFiles,
+            child: !_isUploading
+                ? files(snapshot, button)
+                : const CircularProgressIndicator(),
+          );
         },
       ),
     ));
+  }
+
+  StatelessWidget files(AsyncSnapshot<List<ApiFile>> snapshot, Button button) {
+    return snapshot.data?.isEmpty ?? true
+                  ? NoFiles(button)
+                  : Files(snapshot.data!, button);
   }
 
   Future<void> _refreshFiles() async {
