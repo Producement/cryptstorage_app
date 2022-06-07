@@ -5,7 +5,8 @@ import 'package:chopper/chopper.dart';
 import 'package:cryptstorage/api/token_service.dart';
 import 'package:cryptstorage/model/key_model.dart';
 import 'package:cryptstorage/model/session_model.dart';
-import 'package:get_it/get_it.dart';
+
+import '../injection.dart';
 
 class AuthenticationInterceptor implements RequestInterceptor {
   final jsonBase64 = json.fuse(utf8.fuse(base64Url));
@@ -17,9 +18,9 @@ class AuthenticationInterceptor implements RequestInterceptor {
       {SessionModel? sessionModel,
       KeyModel? keyModel,
       TokenService? tokenService})
-      : _sessionModel = sessionModel ?? GetIt.I.get(),
-        _keyModel = keyModel ?? GetIt.I.get(),
-        _tokenService = tokenService ?? GetIt.I.get();
+      : _sessionModel = sessionModel ?? getIt(),
+        _keyModel = keyModel ?? getIt(),
+        _tokenService = tokenService ?? getIt();
 
   @override
   FutureOr<Request> onRequest(Request request) async {

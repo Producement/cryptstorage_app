@@ -41,11 +41,10 @@ Future<void> setupInjection() async {
   getIt.registerSingleton(SessionModel());
   getIt.registerSingleton(GlobalKey<NavigatorState>());
   getIt.registerSingleton(Navigation());
+  getIt.registerSingleton(MockYubikitOpenPGP(pinProvider: getIt<PinModel>()));
   getIt.registerSingleton(
-      MockYubikitOpenPGP(pinProvider: getIt.get<PinModel>()));
-  getIt.registerSingleton(
-      YubikitFlutter.openPGP(pinProvider: getIt.get<PinModel>()));
-  registerPlugin(getIt.get());
+      YubikitFlutter.openPGP(pinProvider: getIt<PinModel>()));
+  registerPlugin(getIt());
   getIt.registerSingleton(SmartCardService());
   // Services
   final publicClient = createClient(interceptors: [HttpLoggingInterceptor()]);
@@ -58,4 +57,5 @@ Future<void> setupInjection() async {
   getIt.registerSingleton(OnboardingService());
   getIt.registerSingleton(KeyService());
   getIt.registerSingleton(FileService());
+  await getIt.allReady();
 }

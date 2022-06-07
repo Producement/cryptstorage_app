@@ -124,5 +124,5 @@ flutter:
 dependency_overrides:
   swagger_dart_code_generator:
     git:
-      url: git@github.com:Producement/swagger-dart-code-generator.git
-      ref: multipart
+      url: https://github.com/epam-cross-platform-lab/swagger-dart-code-generator.git
+      ref: da8367b

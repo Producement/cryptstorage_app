@@ -43,7 +43,7 @@ class _GenerateState extends State<Generate> with GetItStateMixin<Generate> {
     var text = 'No keys detected';
     if (keyModel.signaturePublicKey != null) {
       text = 'No encryption key detected';
-    } else if (keyModel.getRecipients.isNotEmpty) {
+    } else if (keyModel.encryptionPublicKey != null) {
       text = 'No signing key detected';
     }
     return PageWidget(

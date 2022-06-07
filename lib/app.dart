@@ -10,7 +10,9 @@ class App extends StatelessWidget with GetItMixin {
 
   @override
   Widget build(BuildContext context) {
-    var textTheme = Typography.whiteCupertino;
+    const textTheme = Typography.whiteCupertino;
+    final isInitialised =
+        watchOnly((KeyModel keyModel) => keyModel.isKeyInitialised);
     return MaterialApp(
       navigatorKey: get<GlobalKey<NavigatorState>>(),
       title: 'Yubidrive',
@@ -19,7 +21,7 @@ class App extends StatelessWidget with GetItMixin {
         textTheme: textTheme.copyWith(
             headline3: textTheme.headline3?.copyWith(color: Colors.white)),
       ),
-      home: get<KeyModel>().isKeyInitialised ? Upload() : Onboarding(),
+      home: isInitialised ? Upload() : Onboarding(),
     );
   }
 }

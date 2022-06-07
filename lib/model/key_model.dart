@@ -1,28 +1,26 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:dage/dage.dart';
+import 'package:cryptstorage/injection.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class KeyModel extends ChangeNotifier {
   static const signaturePublicKeyPref = 'signaturePublicKey';
-  static const encryptionRecipientsPref = 'encryptionRecipients';
+  static const encryptionPublicKeyPref = 'encryptionPublicKey';
   Uint8List? _signaturePublicKey;
-  List<AgeRecipient> _encryptionRecipients = [];
+  Uint8List? _encryptionPublicKey;
   final SharedPreferences _prefs;
 
-  KeyModel({SharedPreferences? prefs}) : _prefs = prefs ?? GetIt.I.get() {
+  KeyModel({SharedPreferences? prefs}) : _prefs = prefs ?? getIt() {
     final signaturePublicKey = _prefs.getString(signaturePublicKeyPref);
     if (signaturePublicKey != null) {
       _signaturePublicKey = base64Decode(signaturePublicKey);
     }
-    _encryptionRecipients = _prefs
-            .getStringList(encryptionRecipientsPref)
-            ?.map((e) => AgeRecipient.fromBech32(e))
-            .toList() ??
-        [];
+    final encryptionPublicKey = _prefs.getString(encryptionPublicKeyPref);
+    if (encryptionPublicKey != null) {
+      _encryptionPublicKey = base64Decode(encryptionPublicKey);
+    }
   }
 
   set signaturePublicKey(Uint8List? signaturePublicKey) {
@@ -36,26 +34,27 @@ class KeyModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Uint8List? get signaturePublicKey => _signaturePublicKey;
-
-  void addRecipient(AgeRecipient recipient) {
-    _encryptionRecipients.add(recipient);
-    _prefs.setStringList(
-        encryptionRecipientsPref,
-        _encryptionRecipients
-            .map((recipient) => recipient.toString())
-            .toList());
+  set encryptionPublicKey(Uint8List? encryptionPublicKey) {
+    _encryptionPublicKey = encryptionPublicKey;
+    if (encryptionPublicKey != null) {
+      _prefs.setString(
+          encryptionPublicKeyPref, base64Encode(encryptionPublicKey));
+    } else {
+      _prefs.remove(encryptionPublicKeyPref);
+    }
     notifyListeners();
   }
 
-  List<AgeRecipient> get getRecipients => _encryptionRecipients;
+  Uint8List? get signaturePublicKey => _signaturePublicKey;
+
+  Uint8List? get encryptionPublicKey => _encryptionPublicKey;
 
   bool get isKeyInitialised =>
-      _signaturePublicKey != null && _encryptionRecipients.isNotEmpty;
+      _signaturePublicKey != null && _encryptionPublicKey != null;
 
   void reset() {
     _signaturePublicKey = null;
-    _encryptionRecipients.clear();
+    _encryptionPublicKey = null;
     notifyListeners();
   }
 }
