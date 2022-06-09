@@ -18,10 +18,9 @@ default_platform(:ios)
 platform :ios do
   desc "Push a new beta build to TestFlight"
   lane :beta do
-    build_app(
-      skip_build_archive: true,
-      archive_path: "../build/ios/archive/Runner.xcarchive",
+    upload_to_testflight(
+    ipa: '../build/ios/ipa/cryptstorage_app.ipa',
+    skip_waiting_for_build_processing: true
     )
-    upload_to_testflight
   end
 end
