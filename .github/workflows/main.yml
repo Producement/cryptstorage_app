@@ -97,6 +97,7 @@ jobs:
        with:
          lane: 'beta'
          subdirectory: 'ios'
+         bundle-install-path: 'vendor/bundle'
   deploy_apk:
     name: Deploy Android Beta
     needs: [build_apk]
