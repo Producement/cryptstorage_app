@@ -16,21 +16,40 @@ class KeyService {
     return response.body!.map((e) => e.content).toList();
   }
 
-  void addSignaturePublicKey(List<int> signaturePublicKey) {
-    final key = Jwk(
-        kty: 'OKP',
-        crv: 'Ed25519',
-        x: base64Encode(signaturePublicKey),
-        use: JwkUse.sig);
-    _openApi.keysPost(body: ApiAddKeyRequest(content: key));
+  Future<ApiKey> addSignaturePublicKey(List<int> signaturePublicKey) async {
+    final jwk = _signaturePublicKeyToJwk(signaturePublicKey);
+    var response = await _openApi.keysPost(body: ApiAddKeyRequest(content: jwk));
+    return response.body!;
   }
 
-  void addEncryptionPublicKey(List<int> encryptionPublicKey) {
-    final key = Jwk(
-        kty: 'OKP',
-        crv: 'x25519',
-        x: base64Encode(encryptionPublicKey),
-        use: JwkUse.enc);
-    _openApi.keysPost(body: ApiAddKeyRequest(content: key));
+  Jwk _signaturePublicKeyToJwk(List<int> signaturePublicKey) {
+    return Jwk(
+      kty: 'OKP',
+      crv: 'Ed25519',
+      x: base64Encode(signaturePublicKey),
+      use: JwkUse.sig);
   }
+
+  Future<ApiKey> addEncryptionPublicKey(List<int> encryptionPublicKey) async {
+    final jwk = _encryptionPublicKeyToJwk(encryptionPublicKey);
+    var response = await _openApi.keysPost(body: ApiAddKeyRequest(content: jwk));
+    return response.body!;
+  }
+
+  Jwk _encryptionPublicKeyToJwk(List<int> encryptionPublicKey) {
+    return Jwk(
+      kty: 'OKP',
+      crv: 'x25519',
+      x: base64Encode(encryptionPublicKey),
+      use: JwkUse.enc);
+  }
+
+  Future<void> addEncryptionPublicKeyIfMissing(List<int> encryptionPublicKey) async {
+    var keys = await getKeys();
+    var encryptionJwk = _encryptionPublicKeyToJwk(encryptionPublicKey);
+    if (!keys.contains(encryptionJwk)) {
+      await addEncryptionPublicKey(encryptionPublicKey);
+    }
+  }
+
 }
