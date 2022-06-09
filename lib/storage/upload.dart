@@ -83,8 +83,8 @@ class _UploadState extends State<Upload> with GetItStateMixin {
 
   StatelessWidget files(AsyncSnapshot<List<ApiFile>> snapshot, Button button) {
     return snapshot.data?.isEmpty ?? true
-                  ? NoFiles(button)
-                  : Files(snapshot.data!, button);
+        ? NoFiles(button)
+        : Files(snapshot.data!, button);
   }
 
   Future<void> _refreshFiles() async {
