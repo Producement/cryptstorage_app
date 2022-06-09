@@ -55,6 +55,7 @@ class _UploadState extends State<Upload> with GetItStateMixin {
           var button = Button(
               title: 'Upload',
               onPressed: () async {
+                // TODO: extract to separate class
                 try {
                   FilePickerResult? result =
                       await FilePicker.platform.pickFiles();
