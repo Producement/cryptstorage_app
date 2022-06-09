@@ -38,6 +38,9 @@ jobs:
     needs: [check]
     steps:
     - uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.PAT }}
+        submodules: true
     - uses: actions/setup-java@v1
       with:
         java-version: '17.x'
@@ -45,7 +48,7 @@ jobs:
       with:
         channel: 'stable'
     - run: flutter pub get
-    - run: flutter build apk
+    - run: flutter pub run build_runner build --delete-conflicting-outputs
     - run: flutter build appbundle
     - name: 'Upload Android Artifact'
       uses: actions/upload-artifact@v3
@@ -63,6 +66,7 @@ jobs:
         channel: 'stable'
         architecture: x64
     - run: flutter pub get
+    - run: flutter pub run build_runner build --delete-conflicting-outputs
     - run: flutter build ios --release --no-codesign
     - name: 'Upload iOS Artifact'
       uses: actions/upload-artifact@v3
