@@ -29,7 +29,7 @@ class Files extends StatelessWidget with GetItMixin {
             itemBuilder: (context, index) {
               return Card(
                   child: ListTile(
-                    leading: const Icon(Icons.image),
+                leading: const Icon(Icons.image),
                 title: Text(files[index].name,
                     style: const TextStyle(color: Colors.black87)),
                 onTap: () async {
@@ -65,7 +65,8 @@ class Files extends StatelessWidget with GetItMixin {
 }
 
 class NoFiles extends StatelessWidget {
-  const NoFiles(this.button, {
+  const NoFiles(
+    this.button, {
     Key? key,
   }) : super(key: key);
 
