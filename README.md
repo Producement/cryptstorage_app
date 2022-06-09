@@ -34,3 +34,7 @@ Make sure your code is **testable** and **tested**.
 Make your best effort to write **reusable widgets** (when it's suitable), they ensure we follow the same design style across the entire application while also saving us time in the future.
 
 [Figma](https://www.figma.com/) is our tool of choice when it comes to designing.
+
+## Architecture Diagram
+
+https://drive.google.com/file/d/1TZYXC4cuRho9CmUbjK4bo1Oafh6OMY0Y/view
