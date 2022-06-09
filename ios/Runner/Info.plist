@@ -4,6 +4,8 @@
 <dict>
 	<key>NSCameraUsageDescription</key>
 	<string>The application needs access to the camera to scan QR codes.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>The application needs access to the photo library to upload files.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
@@ -61,6 +63,7 @@
 		<string>A0000005272101</string>
 		<string>A000000308</string>
 		<string>A000000527200101</string>
+		<string>A000000003000000</string>
 	</array>
 	<key>NSBonjourServices</key>
 	<array>
