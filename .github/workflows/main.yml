@@ -4,12 +4,9 @@ jobs:
   check:
     runs-on: linux
     steps:
-    - uses: actions/checkout@v2
-    - name: Checkout backend repo for spec file
-      uses: actions/checkout@v3
+    - uses: actions/checkout@v3
       with:
-        repository: Producement/cryptstorage
-        path: ../cryptstorage
+        submodules: true
     - uses: actions/setup-java@v1
       with:
         java-version: '17.x'

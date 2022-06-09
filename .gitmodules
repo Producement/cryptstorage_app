@@ -1,0 +1,3 @@
+[submodule "specs/cryptstorage"]
+	path = specs/cryptstorage
+	url = git@github.com:Producement/cryptstorage.git
