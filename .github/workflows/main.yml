@@ -44,6 +44,11 @@ jobs:
     - uses: actions/setup-java@v1
       with:
         java-version: '17.x'
+    - name: Create Key properties file
+      run: |
+        echo "$KEY_PROPERTIES" | base64 -d > android/key.properties
+      env:
+        KEY_PROPERTIES: ${{ secrets.KEY_PROPERTIES }}
     - uses: subosito/flutter-action@v2
       with:
         channel: 'stable'
