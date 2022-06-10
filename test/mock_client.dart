@@ -21,7 +21,7 @@ final mockClient = MockClient((request) async {
   return Response(
       jsonEncode(ApiTokenToSign(
           tokenToSign:
-          'eyJ0eXAiOiJKV1QiLCJhbGciOiJFZERTQSJ9.eyJleHAiOjE2NTM5ODM3NDQsImlhdCI6MTY1Mzk4MTk0NCwiYXV0aG9yaXRpZXMiOlsiUk9MRV9VU0VSIl19')),
+              'eyJ0eXAiOiJKV1QiLCJhbGciOiJFZERTQSJ9.eyJleHAiOjE2NTM5ODM3NDQsImlhdCI6MTY1Mzk4MTk0NCwiYXV0aG9yaXRpZXMiOlsiUk9MRV9VU0VSIl19')),
       200,
       headers: {'content-type': 'application/json'});
 });
