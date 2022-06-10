@@ -12,20 +12,28 @@ class FileDownloader {
   FileDownloader(this._httpClient);
 
   void downloadAndSaveFile(ApiFile apiFile) async {
-    var response = await _httpClient.get(Uri.parse(apiFile.url));
-    var bytes = response.bodyBytes;
+    final fileBytes = await downloadFile(apiFile);
     bool status = await Permission.storage.isGranted;
     if (!status) await Permission.storage.request();
+    String directory = await _getSaveDirectory();
+    var path = '$directory/${apiFile.name}';
+    debugPrint('Saving file to: $path');
+    File file = File(path);
+    await file.writeAsBytes(fileBytes);
+  }
+
+  Future<String> _getSaveDirectory() async {
     Directory? directory;
     if (Platform.isAndroid) {
       directory = Directory('/storage/emulated/0/Download');
     } else if (Platform.isIOS) {
       directory = await getApplicationDocumentsDirectory();
     }
-    var dir = directory!.path;
-    var path = '$dir/${apiFile.name}';
-    debugPrint('Saving file to: $path');
-    File file = File(path);
-    await file.writeAsBytes(bytes);
+    return directory!.path;
+  }
+
+  Future<List<int>> downloadFile(ApiFile apiFile) async {
+    var response = await _httpClient.get(Uri.parse(apiFile.url));
+    return response.bodyBytes;
   }
 }
