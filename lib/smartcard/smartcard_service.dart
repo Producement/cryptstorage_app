@@ -3,9 +3,10 @@ import 'dart:typed_data';
 import 'package:cryptstorage/smartcard/mock_yubikey.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tuple/tuple.dart';
 import 'package:yubikit_flutter/yubikit_flutter.dart';
 
-class SmartCardService {
+class SmartCardService implements YubikitOpenPGP {
   final YubikitOpenPGP _yubikitOpenPGP;
   final MockYubikitOpenPGP _mockYubikitOpenPGP;
   final SharedPreferences _preferences;
@@ -34,23 +35,59 @@ class SmartCardService {
     return _preferences.getBool('yubikeyMock') ?? false;
   }
 
-  Future<Uint8List> generateECKey(KeySlot keySlot, ECCurve curve) async {
-    return getService().generateECKey(keySlot, curve);
+  @override
+  Future<Uint8List> generateECKey(KeySlot keySlot, ECCurve curve,
+      [int? timestamp]) {
+    return getService().generateECKey(keySlot, curve, timestamp);
   }
 
+  @override
   Future<Uint8List?> getECPublicKey(KeySlot keySlot) async {
     return getService().getECPublicKey(keySlot);
   }
 
-  Future<Uint8List> sign(Uint8List data) async {
+  @override
+  Future<Uint8List> sign(List<int> data) async {
     return getService().sign(data);
   }
 
+  @override
   Future<PinRetries> getRemainingPinTries() async {
     return getService().getRemainingPinTries();
   }
 
+  @override
   Future<void> reset() async {
     return getService().reset();
+  }
+
+  @override
+  Future<Uint8List> ecSharedSecret(List<int> publicKey) {
+    return getService().ecSharedSecret(publicKey);
+  }
+
+  @override
+  Future<Tuple3<int, int, int>> getApplicationVersion() {
+    return getService().getApplicationVersion();
+  }
+
+  @override
+  Future<Tuple2<int, int>> getOpenPGPVersion() {
+    return getService().getOpenPGPVersion();
+  }
+
+  @override
+  Future<TouchMode> getTouch(KeySlot keySlot) {
+    return getService().getTouch(keySlot);
+  }
+
+  @override
+  Future<void> setPinRetries(int pw1Tries, int pw2Tries, int pw3Tries) {
+    return getService().setPinRetries(pw1Tries, pw2Tries, pw3Tries);
+  }
+
+  @override
+  Future<void> setTouch(KeySlot keySlot, TouchMode mode) {
+    return getService().setTouch(keySlot, mode);
   }
 }

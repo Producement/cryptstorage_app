@@ -45,9 +45,10 @@ Future<void> setupInjection() async {
   getIt.registerSingleton(MockYubikitOpenPGP(pinProvider: getIt<PinModel>()));
   getIt.registerSingleton(
       YubikitFlutter.openPGP(pinProvider: getIt<PinModel>()));
-  registerPlugin(getIt());
   getIt.registerSingleton(SmartCardService());
-  getIt.registerSingleton(FileDownloader(http.Client()));
+  registerPlugin(getIt<SmartCardService>());
+  getIt.registerSingleton(
+      FileDownloader(http.Client(), getIt<SmartCardService>()));
 
   // Services
   final publicClient = createClient(interceptors: [HttpLoggingInterceptor()]);

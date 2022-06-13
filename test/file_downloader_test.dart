@@ -5,9 +5,10 @@ import 'package:cryptstorage/storage/file_downloader.dart';
 import 'package:test/test.dart';
 
 import 'mock_client.dart';
+import 'token_service.mocks.dart';
 
 void main() {
-  final fileDownloader = FileDownloader(mockClient);
+  final fileDownloader = FileDownloader(mockClient, MockSmartCardService());
 
   test('download file', () async {
     final apiFile = ApiFile(
