@@ -3,6 +3,7 @@ import 'package:cryptstorage/storage/file_downloader.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:open_file/open_file.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 import '../images/exclamation.dart';
 import '../ui/body.dart';
@@ -26,9 +27,16 @@ class Files extends StatelessWidget with GetItMixin {
               var currentFile = _files[index];
               return Card(
                   child: ListTile(
-                leading: const Icon(Icons.image),
+                leading: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(Icons.article),
+                  ],
+                ),
                 title: Text(currentFile.name,
                     style: const TextStyle(color: Colors.black87)),
+                subtitle: Text(timeago.format(currentFile.createdAt),
+                    style: const TextStyle(color: Colors.black38)),
                 onTap: () async {
                   final filePath = await get<FileDownloader>()
                       .downloadDecryptAndCacheFile(currentFile);
