@@ -11,6 +11,7 @@ import 'package:cryptstorage/onboarding/service.dart';
 import 'package:cryptstorage/smartcard/mock_yubikey.dart';
 import 'package:cryptstorage/smartcard/smartcard_service.dart';
 import 'package:cryptstorage/storage/file_downloader.dart';
+import 'package:cryptstorage/storage/file_uploader.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
@@ -61,5 +62,7 @@ Future<void> setupInjection() async {
   getIt.registerSingleton(OnboardingService());
   getIt.registerSingleton(KeyService());
   getIt.registerSingleton(FileService());
+  getIt.registerSingleton(FileUploader(
+      getIt<KeyModel>(), getIt<KeyService>(), getIt<FileService>()));
   await getIt.allReady();
 }
