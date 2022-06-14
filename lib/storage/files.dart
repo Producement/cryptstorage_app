@@ -27,31 +27,78 @@ class Files extends StatelessWidget with GetItMixin {
               var currentFile = _files[index];
               return Card(
                   child: ListTile(
-                leading: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.article),
-                  ],
-                ),
-                title: Text(currentFile.name,
-                    style: const TextStyle(color: Colors.black87)),
-                subtitle: Text(timeago.format(currentFile.createdAt),
-                    style: const TextStyle(color: Colors.black38)),
-                onTap: () async {
-                  final filePath = await get<FileDownloader>()
-                      .downloadDecryptAndCacheFile(currentFile);
-                  final result = await OpenFile.open(filePath);
-                  debugPrint(
-                      'OpenFile result: ${result.type}, ${result.message}');
-                },
-                trailing: const Icon(Icons.delete),
-              ));
+                      leading: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Icon(Icons.article),
+                        ],
+                      ),
+                      title: Text(currentFile.name,
+                          style: const TextStyle(color: Colors.black87)),
+                      subtitle: Text(timeago.format(currentFile.createdAt),
+                          style: const TextStyle(color: Colors.black38)),
+                      onTap: () async =>
+                          await _handleDownload(currentFile, context),
+                      trailing: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          PopupMenuButton(
+                            icon: const Icon(Icons.more_vert),
+                            itemBuilder: (context) => <PopupMenuEntry>[
+                              PopupMenuItem(
+                                child: ListTile(
+                                  leading: const Icon(Icons.file_download),
+                                  title: const Text('Download',
+                                      style: TextStyle(color: Colors.black87)),
+                                  onTap: () async {
+                                    Navigator.pop(context);
+                                    await _handleDownload(currentFile, context);
+                                  },
+                                ),
+                              ),
+                              const PopupMenuDivider(),
+                              PopupMenuItem(
+                                child: ListTile(
+                                  leading: const Icon(Icons.delete),
+                                  title: const Text('Delete',
+                                      style: TextStyle(color: Colors.black87)),
+                                  onTap: () async {
+                                    Navigator.pop(context);
+                                    await _handleDelete(currentFile, context);
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      )));
             },
           ),
         ),
         _button,
       ],
     );
+  }
+
+  Future<void> _handleDownload(
+      ApiFile currentFile, BuildContext context) async {
+    try {
+      final filePath =
+          await get<FileDownloader>().downloadDecryptAndCacheFile(currentFile);
+      await OpenFile.open(filePath);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(e.toString()),
+      ));
+      rethrow;
+    }
+  }
+
+  Future<void> _handleDelete(ApiFile currentFile, BuildContext context) async {
+    debugPrint('Handling delete...');
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Handing delete...'),
+    ));
   }
 }
 
