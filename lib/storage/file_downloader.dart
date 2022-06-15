@@ -47,14 +47,6 @@ class FileDownloader {
     return path;
   }
 
-  Future<void> _deleteCacheDir() async {
-    final cacheDir = await getTemporaryDirectory();
-
-    if (cacheDir.existsSync()) {
-      cacheDir.deleteSync(recursive: true);
-    }
-  }
-
   Future<String> _getSaveDirectory() async {
     Directory? directory;
     if (Platform.isAndroid) {

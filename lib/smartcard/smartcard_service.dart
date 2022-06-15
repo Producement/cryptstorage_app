@@ -36,22 +36,6 @@ class SmartCardService implements YubikitOpenPGP {
   }
 
   @override
-  Future<Uint8List> generateECKey(KeySlot keySlot, ECCurve curve,
-      [int? timestamp]) {
-    return getService().generateECKey(keySlot, curve, timestamp);
-  }
-
-  @override
-  Future<Uint8List?> getECPublicKey(KeySlot keySlot) async {
-    return getService().getECPublicKey(keySlot);
-  }
-
-  @override
-  Future<Uint8List> sign(List<int> data) async {
-    return getService().sign(data);
-  }
-
-  @override
   Future<PinRetries> getRemainingPinTries() async {
     return getService().getRemainingPinTries();
   }
@@ -89,5 +73,32 @@ class SmartCardService implements YubikitOpenPGP {
   @override
   Future<void> setTouch(KeySlot keySlot, TouchMode mode) {
     return getService().setTouch(keySlot, mode);
+  }
+
+  @override
+  Future<Uint8List> ecSign(List<int> data) {
+    return getService().ecSign(data);
+  }
+
+  @override
+  Future<ECKeyData> generateECKey(KeySlot keySlot, ECCurve curve,
+      [int? timestamp]) {
+    return getService().generateECKey(keySlot, curve);
+  }
+
+  @override
+  Future<RSAKeyData> generateRSAKey(KeySlot keySlot, int keySize,
+      [int? timestamp]) {
+    return getService().generateRSAKey(keySlot, keySize);
+  }
+
+  @override
+  Future<KeyData?> getPublicKey(KeySlot keySlot) {
+    return getService().getPublicKey(keySlot);
+  }
+
+  @override
+  Future<Uint8List> rsaSign(List<int> data) async {
+    return getService().rsaSign(data);
   }
 }

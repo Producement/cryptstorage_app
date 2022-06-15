@@ -17,16 +17,16 @@ class OnboardingService {
     logger.info('Fetching key info');
     _keyModel.reset();
     final signaturePublicKey =
-        await _smartCardService.getECPublicKey(KeySlot.signature);
+        await _smartCardService.getPublicKey(KeySlot.signature);
     final encryptionPublicKey =
-        await _smartCardService.getECPublicKey(KeySlot.encryption);
+        await _smartCardService.getPublicKey(KeySlot.encryption);
     if (signaturePublicKey != null) {
       logger.info('Signature key present');
-      _keyModel.signaturePublicKey = signaturePublicKey;
+      _keyModel.signaturePublicKey = signaturePublicKey.toJwk();
     }
     if (encryptionPublicKey != null) {
       logger.info('Encryption key present');
-      _keyModel.encryptionPublicKey = encryptionPublicKey;
+      _keyModel.encryptionPublicKey = encryptionPublicKey.toJwk();
     }
     return _keyModel.isKeyInitialised;
   }
@@ -37,13 +37,13 @@ class OnboardingService {
       logger.info('Generating signature key');
       final signingPublicKey = await _smartCardService.generateECKey(
           KeySlot.signature, ECCurve.ed25519);
-      _keyModel.signaturePublicKey = signingPublicKey;
+      _keyModel.signaturePublicKey = signingPublicKey.toJwk();
     }
     if (_keyModel.encryptionPublicKey == null) {
       logger.info('Generating encryption key');
       final encryptionPublicKey = await _smartCardService.generateECKey(
           KeySlot.encryption, ECCurve.x25519);
-      _keyModel.encryptionPublicKey = encryptionPublicKey;
+      _keyModel.encryptionPublicKey = encryptionPublicKey.toJwk();
     }
     return _keyModel.isKeyInitialised;
   }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:get_it/get_it.dart';
+import 'package:jwk/jwk.dart' as jwk;
 
 import '../generated/openapi.swagger.dart';
 
@@ -16,38 +17,30 @@ class KeyService {
     return response.body!.map((e) => e.content).toList();
   }
 
-  Future<ApiKey> addSignaturePublicKey(List<int> signaturePublicKey) async {
-    final jwk = _signaturePublicKeyToJwk(signaturePublicKey);
-    var response =
-        await _openApi.keysPost(body: ApiAddKeyRequest(content: jwk));
-    return response.body!;
-  }
-
-  Jwk _signaturePublicKeyToJwk(List<int> signaturePublicKey) {
-    return Jwk(
-        kty: 'OKP',
-        crv: 'Ed25519',
-        x: base64Encode(signaturePublicKey),
-        use: JwkUse.sig);
-  }
-
-  Future<ApiKey> addEncryptionPublicKey(List<int> encryptionPublicKey) async {
+  Future<ApiKey> addEncryptionPublicKey(jwk.Jwk encryptionPublicKey) async {
     final jwk = _encryptionPublicKeyToJwk(encryptionPublicKey);
     var response =
         await _openApi.keysPost(body: ApiAddKeyRequest(content: jwk));
     return response.body!;
   }
 
-  Jwk _encryptionPublicKeyToJwk(List<int> encryptionPublicKey) {
-    return Jwk(
+  Jwk _encryptionPublicKeyToJwk(jwk.Jwk encryptionPublicKey) {
+    if (encryptionPublicKey.kty == 'RSA') {
+      return RsaJwk(
+          kty: encryptionPublicKey.kty!,
+          n: base64UrlEncode(encryptionPublicKey.n!),
+          e: base64UrlEncode(encryptionPublicKey.e!),
+          use: JwkUse.enc);
+    }
+    return EllipticJwk(
         kty: 'OKP',
         crv: 'x25519',
-        x: base64Encode(encryptionPublicKey),
+        x: base64UrlEncode(encryptionPublicKey.x!),
         use: JwkUse.enc);
   }
 
   Future<void> addEncryptionPublicKeyIfMissing(
-      List<int> encryptionPublicKey) async {
+      jwk.Jwk encryptionPublicKey) async {
     var keys = await getKeys();
     var encryptionJwk = _encryptionPublicKeyToJwk(encryptionPublicKey);
     if (!keys.contains(encryptionJwk)) {

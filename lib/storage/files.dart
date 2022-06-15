@@ -39,7 +39,7 @@ class Files extends StatelessWidget with GetItMixin {
                       subtitle: Text(timeago.format(currentFile.createdAt),
                           style: const TextStyle(color: Colors.black38)),
                       onTap: () async =>
-                      await _handleDownload(currentFile, context),
+                          await _handleDownload(currentFile, context),
                       trailing: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -81,7 +81,8 @@ class Files extends StatelessWidget with GetItMixin {
     );
   }
 
-  Future<void> _handleDownload(ApiFile currentFile, BuildContext context) async {
+  Future<void> _handleDownload(
+      ApiFile currentFile, BuildContext context) async {
     try {
       debugPrint('Handling download...');
       _setLoading(true);

@@ -36,7 +36,8 @@ class FileUploader {
 
   Future<List<AgeRecipient>> _getRecipients() async {
     var keys = await _keyService.getKeys();
-    var encryptionKeys = keys.where((key) => key.use == JwkUse.enc);
+    var encryptionKeys =
+        keys.where((key) => key.use == JwkUse.enc).whereType<EllipticJwk>();
     if (encryptionKeys.isEmpty) {
       throw Exception('No encryption keys found');
     }
