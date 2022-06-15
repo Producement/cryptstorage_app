@@ -16,4 +16,8 @@ class FileService {
   Future<ApiFile> addFile(String fileName, List<int> file) async {
     return (await _openApi.filesPost(filename: fileName, file: file)).body!;
   }
+
+  Future<void> deleteFile(String fileId) async {
+    await _openApi.filesIdDelete(id: fileId);
+  }
 }

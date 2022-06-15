@@ -2,6 +2,7 @@ import 'package:cryptstorage/api/file_service.dart';
 import 'package:cryptstorage/generated/openapi.swagger.dart';
 import 'package:cryptstorage/storage/file_uploader.dart';
 import 'package:cryptstorage/storage/files.dart';
+import 'package:cryptstorage/storage/no_files.dart';
 import 'package:cryptstorage/ui/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it_mixin/get_it_mixin.dart';
@@ -19,7 +20,7 @@ class Upload extends StatefulWidget with GetItStatefulWidgetMixin {
 
 class _UploadState extends State<Upload> with GetItStateMixin {
   late Future<List<ApiFile>> _files;
-  bool _isUploading = false;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -48,7 +49,7 @@ class _UploadState extends State<Upload> with GetItStateMixin {
               title: 'Upload',
               onPressed: () async {
                 try {
-                  _setUploading(true);
+                  _setLoading(true);
                   await get<FileUploader>().pickEncryptAndUploadFile();
                   await _refreshFiles();
                 } catch (e) {
@@ -57,14 +58,14 @@ class _UploadState extends State<Upload> with GetItStateMixin {
                   ));
                   rethrow;
                 } finally {
-                  _setUploading(false);
+                  _setLoading(false);
                 }
               });
 
           return RefreshIndicator(
             onRefresh: _refreshFiles,
-            child: !_isUploading
-                ? _filesWidget(snapshot, button)
+            child: !_isLoading
+                ? _filesWidget(snapshot, button, _refreshFiles, _setLoading)
                 : const CircularProgressIndicator(),
           );
         },
@@ -72,17 +73,20 @@ class _UploadState extends State<Upload> with GetItStateMixin {
     ));
   }
 
-  void _setUploading(bool isUploading) {
+  void _setLoading(bool isLoading) {
     setState(() {
-      _isUploading = isUploading;
+      _isLoading = isLoading;
     });
   }
 
   StatelessWidget _filesWidget(
-      AsyncSnapshot<List<ApiFile>> snapshot, Button button) {
+      AsyncSnapshot<List<ApiFile>> snapshot,
+      Button button,
+      Future<void> Function() refreshFiles,
+      void Function(bool isLoading) setLoading) {
     return snapshot.data?.isEmpty ?? true
         ? NoFiles(button)
-        : Files(snapshot.data!, button);
+        : Files(snapshot.data!, button, refreshFiles, setLoading);
   }
 
   Future<void> _refreshFiles() async {

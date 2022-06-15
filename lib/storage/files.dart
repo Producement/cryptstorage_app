@@ -1,3 +1,4 @@
+import 'package:cryptstorage/api/file_service.dart';
 import 'package:cryptstorage/generated/openapi.swagger.dart';
 import 'package:cryptstorage/storage/file_downloader.dart';
 import 'package:flutter/material.dart';
@@ -5,15 +6,15 @@ import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:open_file/open_file.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-import '../images/exclamation.dart';
-import '../ui/body.dart';
-import '../ui/heading.dart';
-
 class Files extends StatelessWidget with GetItMixin {
-  Files(this._files, this._button, {Key? key}) : super(key: key);
+  Files(this._files, this._button, this._refreshFiles, this._setLoading,
+      {Key? key})
+      : super(key: key);
 
   final List<ApiFile> _files;
   final Widget _button;
+  final Future<void> Function() _refreshFiles;
+  final void Function(bool isLoading) _setLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +39,7 @@ class Files extends StatelessWidget with GetItMixin {
                       subtitle: Text(timeago.format(currentFile.createdAt),
                           style: const TextStyle(color: Colors.black38)),
                       onTap: () async =>
-                          await _handleDownload(currentFile, context),
+                      await _handleDownload(currentFile, context),
                       trailing: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -80,12 +81,14 @@ class Files extends StatelessWidget with GetItMixin {
     );
   }
 
-  Future<void> _handleDownload(
-      ApiFile currentFile, BuildContext context) async {
+  Future<void> _handleDownload(ApiFile currentFile, BuildContext context) async {
     try {
+      debugPrint('Handling download...');
+      _setLoading(true);
       final filePath =
           await get<FileDownloader>().downloadDecryptAndCacheFile(currentFile);
       await OpenFile.open(filePath);
+      _setLoading(false);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(e.toString()),
@@ -94,46 +97,19 @@ class Files extends StatelessWidget with GetItMixin {
     }
   }
 
-  Future<void> _handleDelete(ApiFile currentFile, BuildContext context) async {
-    debugPrint('Handling delete...');
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('Handing delete...'),
-    ));
-  }
-}
-
-class NoFiles extends StatelessWidget {
-  const NoFiles(
-    this.button, {
-    Key? key,
-  }) : super(key: key);
-
-  final Widget button;
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: const <Widget>[
-                        ExclamationImage(),
-                        Heading(title: 'Folder is Empty'),
-                        Body(text: 'Secure your files by uploading them here'),
-                      ],
-                    ),
-                    button,
-                  ],
-                )));
-      },
-    );
+  Future<void> _handleDelete(ApiFile file, BuildContext context) async {
+    try {
+      debugPrint('Handling delete...');
+      _setLoading(true);
+      await get<FileService>().deleteFile(file.id);
+      debugPrint('Refreshing files...');
+      await _refreshFiles();
+      _setLoading(false);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(e.toString()),
+      ));
+      rethrow;
+    }
   }
 }
