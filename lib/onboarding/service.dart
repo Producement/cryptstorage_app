@@ -56,6 +56,7 @@ class OnboardingService {
   Jwk _keyWithUse(Jwk key, String use) {
     final json = Map.from(key.toJson());
     json['use'] = use;
+    json['kty'] = 'OKP';
     return Jwk.fromJson(json);
   }
 }

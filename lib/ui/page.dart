@@ -48,11 +48,15 @@ class PageWidget extends StatelessWidget with GetItMixin {
               onSelected: (value) async {
                 if (value == 0) {
                   await get<SmartCardService>().reset();
+                  get<KeyModel>().reset();
+                  await get<Navigation>().backToApp();
                 } else if (value == 1) {
                   get<KeyModel>().reset();
                   await get<Navigation>().backToApp();
                 } else if (value == 2) {
                   await get<SmartCardService>().toggleMock();
+                  get<KeyModel>().reset();
+                  await get<Navigation>().backToApp();
                 }
               }),
         ],
