@@ -30,8 +30,9 @@ class FileDownloader {
 
   Future<String> downloadDecryptAndCacheFile(ApiFile apiFile) async {
     final encryptedFile = await downloadFile(apiFile);
-    var recipientFromCard = await YubikeyPgpX25519AgePlugin.fromCard(
-        _smartCardService.getService());
+    var recipientFromCard =
+        await YubikeyPgpX25519AgePlugin.fromCard(_smartCardService) ??
+            await YubikeyPgpRsaAgePlugin.fromCard(_smartCardService);
     if (recipientFromCard == null) {
       throw Exception('No recipient found');
     }
