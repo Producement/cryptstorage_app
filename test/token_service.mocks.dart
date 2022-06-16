@@ -125,4 +125,9 @@ class MockSmartCardService extends _i1.Mock implements _i4.SmartCardService {
       (super.noSuchMethod(Invocation.method(#rsaSign, [data]),
               returnValue: Future<_i6.Uint8List>.value(_i6.Uint8List(0)))
           as _i5.Future<_i6.Uint8List>);
+  @override
+  _i5.Future<_i6.Uint8List> decipher(List<int>? ciphertext) =>
+      (super.noSuchMethod(Invocation.method(#decipher, [ciphertext]),
+              returnValue: Future<_i6.Uint8List>.value(_i6.Uint8List(0)))
+          as _i5.Future<_i6.Uint8List>);
 }

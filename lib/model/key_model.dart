@@ -53,8 +53,8 @@ class KeyModel extends ChangeNotifier {
       _signaturePublicKey != null && _encryptionPublicKey != null;
 
   void reset() {
-    _signaturePublicKey = null;
-    _encryptionPublicKey = null;
+    signaturePublicKey = null;
+    encryptionPublicKey = null;
     notifyListeners();
   }
 }

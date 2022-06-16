@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:convert/convert.dart';
 import 'package:cryptography/cryptography.dart';
 import 'package:get_it/get_it.dart';
 import 'package:jwk/jwk.dart';
@@ -16,7 +15,6 @@ class MockYubikitOpenPGP implements YubikitOpenPGP {
   final SharedPreferences _preferences;
   static final signingAlgorithm = Ed25519();
   static final encryptionAlgorithm = X25519();
-  static final rsaAlgorithm = RsaSsaPkcs1v15(Sha512());
   KeyPair? _signingKeyPair;
   KeyPair? _encryptionKeyPair;
   int pinTries = 3, adminPinTries = 3;
@@ -179,47 +177,16 @@ class MockYubikitOpenPGP implements YubikitOpenPGP {
   @override
   Future<RSAKeyData> generateRSAKey(KeySlot keySlot, int keySize,
       [int? timestamp]) async {
-    verifyAdminPin();
-    if (keySlot == KeySlot.encryption) {
-      final encryptionKeyPair = await rsaAlgorithm
-          .newKeyPairFromSeed(List.generate(32, (index) => 0x01));
-      _encryptionKeyPair = encryptionKeyPair;
-      _serialize(mockEncryptionKeyPreference, encryptionKeyPair);
-      final pubKey = await encryptionKeyPair.extractPublicKey() as RsaPublicKey;
-      return RSAKeyData(pubKey.n, pubKey.e);
-    } else if (keySlot == KeySlot.signature) {
-      final signingKeyPair = await rsaAlgorithm
-          .newKeyPairFromSeed(List.generate(32, (index) => 0x01));
-      _signingKeyPair = signingKeyPair;
-      _serialize(mockSigningKeyPreference, signingKeyPair);
-      final pubKey = await signingKeyPair.extractPublicKey() as RsaPublicKey;
-      return RSAKeyData(pubKey.n, pubKey.e);
-    }
     throw UnimplementedError();
   }
 
   @override
   Future<Uint8List> rsaSign(List<int> data) async {
-    verifyPin();
-    final sha512 = Sha512();
-    final digest = await sha512.hash(data);
-    final oid = hex.decode('608648016503040203');
-    final digestInfo = [
-          0x30,
-          0x51,
-          0x30,
-          0x0D,
-          0x06,
-          oid.length,
-          ...(oid),
-          0x05,
-          0x00,
-          0x04,
-          0x40
-        ] +
-        digest.bytes;
-    final signature =
-        await signingAlgorithm.sign(digestInfo, keyPair: _signingKeyPair!);
-    return Uint8List.fromList(signature.bytes);
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Uint8List> decipher(List<int> ciphertext) {
+    throw UnimplementedError();
   }
 }

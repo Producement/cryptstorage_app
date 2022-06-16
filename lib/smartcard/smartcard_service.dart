@@ -101,4 +101,9 @@ class SmartCardService implements YubikitOpenPGP {
   Future<Uint8List> rsaSign(List<int> data) async {
     return getService().rsaSign(data);
   }
+
+  @override
+  Future<Uint8List> decipher(List<int> ciphertext) {
+    return getService().decipher(ciphertext);
+  }
 }
