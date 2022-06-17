@@ -185,4 +185,12 @@ class MockYubikitOpenPGP implements YubikitOpenPGP {
   Future<OpenPGPVersion> getOpenPGPVersion() {
     throw UnimplementedError();
   }
+
+  @override
+  Future<Map<KeySlot, KeyData?>> getAllPublicKeys() async {
+    return {
+      KeySlot.signature: await getPublicKey(KeySlot.signature),
+      KeySlot.encryption: await getPublicKey(KeySlot.encryption),
+    };
+  }
 }

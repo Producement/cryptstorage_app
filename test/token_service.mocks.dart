@@ -54,6 +54,12 @@ class MockSmartCardService extends _i1.Mock implements _i3.SmartCardService {
       (super.noSuchMethod(Invocation.method(#isMock, []), returnValue: false)
           as bool);
   @override
+  _i4.Future<Map<_i2.KeySlot, _i2.KeyData?>> getAllPublicKeys() =>
+      (super.noSuchMethod(Invocation.method(#getAllPublicKeys, []),
+              returnValue: Future<Map<_i2.KeySlot, _i2.KeyData?>>.value(
+                  <_i2.KeySlot, _i2.KeyData?>{}))
+          as _i4.Future<Map<_i2.KeySlot, _i2.KeyData?>>);
+  @override
   _i4.Future<_i2.PinRetries> getRemainingPinTries() =>
       (super.noSuchMethod(Invocation.method(#getRemainingPinTries, []),
               returnValue: Future<_i2.PinRetries>.value(_FakePinRetries_1()))

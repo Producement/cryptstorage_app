@@ -9,14 +9,12 @@ class SmartCardService implements YubikitOpenPGP {
   final YubikitOpenPGP _yubikitOpenPGP;
   final MockYubikitOpenPGP _mockYubikitOpenPGP;
   final SharedPreferences _preferences;
-  final SmartCardInterface _interface;
 
   SmartCardService(
       {SmartCardInterface? interface,
       PinProvider? pinProvider,
       SharedPreferences? preferences})
-      : _interface = interface ?? GetIt.I.get(),
-        _preferences = preferences ?? GetIt.I.get(),
+      : _preferences = preferences ?? GetIt.I.get(),
         _yubikitOpenPGP =
             YubikitFlutter.openPGP(pinProvider: pinProvider ?? GetIt.I.get()),
         _mockYubikitOpenPGP = MockYubikitOpenPGP(pinProvider: pinProvider);
@@ -37,29 +35,9 @@ class SmartCardService implements YubikitOpenPGP {
     return _preferences.getBool('yubikeyMock') ?? false;
   }
 
-  Future<Map<KeySlot, KeyData?>> getAllKeys() async {
-    const cmds = YubikitOpenPGPCommands();
-    final commands = [
-      cmds.getAsymmetricPublicKey(KeySlot.signature),
-      cmds.getAsymmetricPublicKey(KeySlot.encryption),
-      cmds.getAsymmetricPublicKey(KeySlot.authentication),
-    ];
-    final results =
-        await _interface.sendCommands(Application.openpgp, commands);
-    final result = await results.toList();
-    final entries = <MapEntry<KeySlot, KeyData?>>[];
-    entries.add(_keyEntry(KeySlot.signature, result[0]));
-    entries.add(_keyEntry(KeySlot.encryption, result[1]));
-    entries.add(_keyEntry(KeySlot.authentication, result[2]));
-    return Map.fromEntries(entries);
-  }
-
-  MapEntry<KeySlot, KeyData?> _keyEntry(
-      KeySlot keySlot, SmartCardResponse response) {
-    if (response is SuccessfulResponse) {
-      return MapEntry(keySlot, KeyData.fromBytes(response.response, keySlot));
-    }
-    return MapEntry(keySlot, null);
+  @override
+  Future<Map<KeySlot, KeyData?>> getAllPublicKeys() async {
+    return getService().getAllPublicKeys();
   }
 
   @override
@@ -68,28 +46,7 @@ class SmartCardService implements YubikitOpenPGP {
 
   @override
   Future<void> reset() async {
-    if (isMock()) {
-      return getService().reset();
-    }
-    return _batchReset();
-  }
-
-  Future<void> _batchReset() async {
-    const cmds = YubikitOpenPGPCommands();
-    final commands = [..._blockPins(), cmds.terminate(), cmds.activate()];
-    await _interface.sendCommands(Application.openpgp, commands);
-  }
-
-  List<Uint8List> _blockPins() {
-    const cmds = YubikitOpenPGPCommands();
-    var invalidPin = '00000000';
-    final pinCmds = Iterable.generate(9)
-        .map((e) => cmds.verifySignaturePin(invalidPin))
-        .toList();
-    final adminPinCmds = Iterable.generate(9)
-        .map((e) => cmds.verifyAdminPin(invalidPin))
-        .toList();
-    return pinCmds + adminPinCmds;
+    return getService().reset();
   }
 
   @override
