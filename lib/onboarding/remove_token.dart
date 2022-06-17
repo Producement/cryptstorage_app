@@ -34,6 +34,8 @@ class _RemoveTokenState extends State<RemoveToken> with GetItStateMixin {
         _statusTitle = 'You may now remove your token';
         _loading = false;
       });
+    }).catchError((error) {
+      _loading = false;
     });
   }
 
