@@ -1,3 +1,4 @@
+import 'package:confirm_dialog/confirm_dialog.dart';
 import 'package:cryptstorage/model/key_model.dart';
 import 'package:cryptstorage/model/session_model.dart';
 import 'package:cryptstorage/smartcard/smartcard_service.dart';
@@ -48,10 +49,15 @@ class PageWidget extends StatelessWidget with GetItMixin {
               },
               onSelected: (value) async {
                 if (value == 0) {
-                  await get<SmartCardService>().reset();
-                  get<KeyModel>().reset();
-                  get<SessionModel>().reset();
-                  await get<Navigation>().backToApp();
+                  if (await confirm(context,
+                      content: Text(
+                          'Resetting the token will remove all the keys. You will not be able to use this token to access any uploaded files. Are you sure?',
+                          style: style))) {
+                    await get<SmartCardService>().reset();
+                    get<KeyModel>().reset();
+                    get<SessionModel>().reset();
+                    await get<Navigation>().backToApp();
+                  }
                 } else if (value == 1) {
                   get<KeyModel>().reset();
                   get<SessionModel>().reset();

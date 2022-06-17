@@ -23,8 +23,9 @@ class Generate extends StatefulWidget with GetItStatefulWidgetMixin {
 }
 
 class _GenerateState extends State<Generate> with GetItStateMixin<Generate> {
-  int _adminPinTries = 0;
+  int? _adminPinTries;
   String? _errorText;
+  String _statusMessage = 'Generate new keys using default Admin PIN';
   bool _showPin = false;
   bool _loading = false;
 
@@ -33,7 +34,7 @@ class _GenerateState extends State<Generate> with GetItStateMixin<Generate> {
     super.initState();
     _showPin = false;
     _loading = false;
-    _adminPinTries = 0;
+    get<PinModel>().reset();
   }
 
   @override
@@ -58,31 +59,40 @@ class _GenerateState extends State<Generate> with GetItStateMixin<Generate> {
               Heading(
                 title: text,
               ),
-              Body(
-                  text:
-                      'Generate new keys using ${_showPin ? 'custom' : 'default'} Admin PIN'),
-              ...(_showPin
-                  ? [
-                      Input(
-                          errorText: _errorText,
-                          onChanged: (text) {
-                            get<PinModel>().adminPin = text;
-                          },
-                          labelText: 'Admin PIN ($_adminPinTries tries left)')
-                    ]
-                  : []),
+              Body(text: _statusMessage),
               ...(_loading
                   ? [const Loader()]
                   : [
+                      ...(_showPin
+                          ? [
+                              Input(
+                                  errorText: _errorText,
+                                  onChanged: (text) {
+                                    get<PinModel>().adminPin = text;
+                                  },
+                                  labelText:
+                                      'Admin PIN${_adminPinTries != null ? ' ($_adminPinTries tries left)' : ''}')
+                            ]
+                          : []),
                       Button(
                           title: 'Generate!',
                           onPressed: () async {
                             try {
                               setState(() {
                                 _loading = true;
+                                _statusMessage = 'Generating new signing key';
                               });
-                              final initialised =
-                                  await get<OnboardingService>().generate();
+                              var initialised = await get<OnboardingService>()
+                                  .generateSignatureKey();
+                              if (initialised) {
+                                await get<Navigation>().goToRemoveToken();
+                              }
+                              setState(() {
+                                _statusMessage =
+                                    'Generating new encryption key';
+                              });
+                              initialised = await get<OnboardingService>()
+                                  .generateEncryptionKey();
                               if (initialised) {
                                 await get<Navigation>().goToRemoveToken();
                               }
@@ -100,22 +110,25 @@ class _GenerateState extends State<Generate> with GetItStateMixin<Generate> {
                                 _loading = false;
                               });
                             }
-                          })
-                    ]),
-              ...(_showPin
-                  ? []
-                  : [
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _showPin = true;
-                          });
-                        },
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Body(text: 'I have a custom Admin PIN'),
-                        ),
-                      )
+                          }),
+                      ...(_showPin
+                          ? []
+                          : [
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _showPin = true;
+                                    _statusMessage =
+                                        'Generate new keys using ${_showPin ? 'custom' : 'default'} Admin PIN';
+                                  });
+                                },
+                                child: const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child:
+                                      Body(text: 'I have a custom Admin PIN'),
+                                ),
+                              )
+                            ]),
                     ]),
             ],
           ),

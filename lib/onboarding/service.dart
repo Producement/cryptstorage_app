@@ -30,14 +30,17 @@ class OnboardingService {
     return _keyModel.isKeyInitialised;
   }
 
-  Future<bool> generate() async {
-    logger.info('Generating missing keys');
+  Future<bool> generateSignatureKey() async {
     if (_keyModel.signaturePublicKey == null) {
       logger.info('Generating signature key');
       final signaturePublicKey = await _smartCardService.generateECKey(
           KeySlot.signature, ECCurve.ed25519);
       _keyModel.signaturePublicKey = signaturePublicKey.toJwk();
     }
+    return _keyModel.isKeyInitialised;
+  }
+
+  Future<bool> generateEncryptionKey() async {
     if (_keyModel.encryptionPublicKey == null) {
       logger.info('Generating encryption key');
       final encryptionPublicKey = await _smartCardService.generateECKey(

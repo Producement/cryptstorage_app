@@ -58,6 +58,7 @@ dependencies:
   open_file: ^3.2.1
   jwk: ^0.1.1
   timeago: ^3.2.2
+  confirm_dialog: ^1.0.1
 
 dev_dependencies:
   test: ^1.19.5
