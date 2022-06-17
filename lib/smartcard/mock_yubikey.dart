@@ -67,18 +67,15 @@ class MockYubikitOpenPGP implements YubikitOpenPGP {
           .newKeyPairFromSeed(List.generate(32, (index) => 0x01));
       _encryptionKeyPair = encryptionKeyPair;
       _serialize(mockEncryptionKeyPreference, encryptionKeyPair);
-      return ECKeyData(
-          Uint8List.fromList(
-              (await encryptionKeyPair.extractPublicKey()).bytes),
-          keySlot);
+      final response = (await encryptionKeyPair.extractPublicKey()).bytes;
+      return ECKeyData(response, keySlot);
     } else if (keySlot == KeySlot.signature) {
       final signingKeyPair = await signingAlgorithm
           .newKeyPairFromSeed(List.generate(32, (index) => 0x02));
       _signingKeyPair = signingKeyPair;
       _serialize(mockSigningKeyPreference, signingKeyPair);
-      return ECKeyData(
-          Uint8List.fromList((await signingKeyPair.extractPublicKey()).bytes),
-          keySlot);
+      final response = (await signingKeyPair.extractPublicKey()).bytes;
+      return ECKeyData(response, keySlot);
     }
     throw UnimplementedError();
   }
@@ -93,7 +90,7 @@ class MockYubikitOpenPGP implements YubikitOpenPGP {
     if (jwk == null) {
       return null;
     }
-    return Jwk.fromUtf8(json.decode(jwk)).toKeyPair();
+    return Jwk.fromJson(json.decode(jwk)).toKeyPair();
   }
 
   @override
