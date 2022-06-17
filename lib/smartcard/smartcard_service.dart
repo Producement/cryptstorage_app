@@ -69,7 +69,28 @@ class SmartCardService implements YubikitOpenPGP {
 
   @override
   Future<void> reset() async {
-    return getService().reset();
+    if (isMock()) {
+      return getService().reset();
+    }
+    return _batchReset();
+  }
+
+  Future<void> _batchReset() async {
+    const cmds = YubikitOpenPGPCommands();
+    final commands = [..._blockPins(), cmds.terminate(), cmds.activate()];
+    await _interface.sendCommands(Application.openpgp, commands);
+  }
+
+  List<Uint8List> _blockPins() {
+    const cmds = YubikitOpenPGPCommands();
+    var invalidPin = '00000000';
+    final pinCmds = Iterable.generate(9)
+        .map((e) => cmds.verifySignaturePin(invalidPin))
+        .toList();
+    final adminPinCmds = Iterable.generate(9)
+        .map((e) => cmds.verifyAdminPin(invalidPin))
+        .toList();
+    return pinCmds + adminPinCmds;
   }
 
   @override
