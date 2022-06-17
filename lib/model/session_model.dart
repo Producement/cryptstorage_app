@@ -11,4 +11,8 @@ class SessionModel extends ChangeNotifier {
   String? get accessToken {
     return _accessToken;
   }
+
+  void reset() {
+    accessToken = null;
+  }
 }

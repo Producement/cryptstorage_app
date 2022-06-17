@@ -5,7 +5,6 @@ import 'package:cryptography/cryptography.dart';
 import 'package:get_it/get_it.dart';
 import 'package:jwk/jwk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tuple/tuple.dart';
 import 'package:yubikit_flutter/yubikit_flutter.dart';
 
 class MockYubikitOpenPGP implements YubikitOpenPGP {
@@ -71,7 +70,7 @@ class MockYubikitOpenPGP implements YubikitOpenPGP {
       return ECKeyData(
           Uint8List.fromList(
               (await encryptionKeyPair.extractPublicKey()).bytes),
-          KeyPairType.x25519);
+          keySlot);
     } else if (keySlot == KeySlot.signature) {
       final signingKeyPair = await signingAlgorithm
           .newKeyPairFromSeed(List.generate(32, (index) => 0x02));
@@ -79,7 +78,7 @@ class MockYubikitOpenPGP implements YubikitOpenPGP {
       _serialize(mockSigningKeyPreference, signingKeyPair);
       return ECKeyData(
           Uint8List.fromList((await signingKeyPair.extractPublicKey()).bytes),
-          KeyPairType.ed25519);
+          keySlot);
     }
     throw UnimplementedError();
   }
@@ -98,36 +97,26 @@ class MockYubikitOpenPGP implements YubikitOpenPGP {
   }
 
   @override
-  Future<Tuple3<int, int, int>> getApplicationVersion() {
-    throw UnimplementedError();
-  }
-
-  @override
   Future<KeyData?> getPublicKey(KeySlot keySlot) async {
     if (keySlot == KeySlot.encryption) {
       final pubKey = await _encryptionKeyPair?.extractPublicKey();
       if (pubKey is RsaPublicKey) {
-        return RSAKeyData(pubKey.n, pubKey.e);
+        return RSAKeyData(pubKey.n, pubKey.e, keySlot);
       } else if (pubKey is SimplePublicKey) {
-        return ECKeyData(pubKey.bytes, KeyPairType.x25519);
+        return ECKeyData(pubKey.bytes, keySlot);
       } else {
         return null;
       }
     } else if (keySlot == KeySlot.signature) {
       final pubKey = await _signingKeyPair?.extractPublicKey();
       if (pubKey is RsaPublicKey) {
-        return RSAKeyData(pubKey.n, pubKey.e);
+        return RSAKeyData(pubKey.n, pubKey.e, keySlot);
       } else if (pubKey is SimplePublicKey) {
-        return ECKeyData(pubKey.bytes, KeyPairType.ed25519);
+        return ECKeyData(pubKey.bytes, keySlot);
       } else {
         return null;
       }
     }
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Tuple2<int, int>> getOpenPGPVersion() {
     throw UnimplementedError();
   }
 
@@ -187,6 +176,16 @@ class MockYubikitOpenPGP implements YubikitOpenPGP {
 
   @override
   Future<Uint8List> decipher(List<int> ciphertext) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<ApplicationVersion> getApplicationVersion() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<OpenPGPVersion> getOpenPGPVersion() {
     throw UnimplementedError();
   }
 }

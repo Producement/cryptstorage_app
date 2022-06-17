@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:cryptstorage/smartcard/mock_yubikey.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tuple/tuple.dart';
 import 'package:yubikit_flutter/yubikit_flutter.dart';
 
 class SmartCardService implements YubikitOpenPGP {
@@ -51,12 +50,12 @@ class SmartCardService implements YubikitOpenPGP {
   }
 
   @override
-  Future<Tuple3<int, int, int>> getApplicationVersion() {
+  Future<ApplicationVersion> getApplicationVersion() {
     return getService().getApplicationVersion();
   }
 
   @override
-  Future<Tuple2<int, int>> getOpenPGPVersion() {
+  Future<OpenPGPVersion> getOpenPGPVersion() {
     return getService().getOpenPGPVersion();
   }
 

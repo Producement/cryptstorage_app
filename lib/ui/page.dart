@@ -1,4 +1,5 @@
 import 'package:cryptstorage/model/key_model.dart';
+import 'package:cryptstorage/model/session_model.dart';
 import 'package:cryptstorage/smartcard/smartcard_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -34,13 +35,13 @@ class PageWidget extends StatelessWidget with GetItMixin {
                   PopupMenuItem<int>(
                     textStyle: style,
                     value: 1,
-                    child: const Text('Use other token'),
+                    child: const Text('Setup new token'),
                   ),
                   if (kDebugMode) ...[
                     CheckedPopupMenuItem<int>(
                       value: 2,
                       checked: get<SmartCardService>().isMock(),
-                      child: Text('Use mock', style: style),
+                      child: Text('Mock token', style: style),
                     )
                   ]
                 ];
@@ -49,13 +50,16 @@ class PageWidget extends StatelessWidget with GetItMixin {
                 if (value == 0) {
                   await get<SmartCardService>().reset();
                   get<KeyModel>().reset();
+                  get<SessionModel>().reset();
                   await get<Navigation>().backToApp();
                 } else if (value == 1) {
                   get<KeyModel>().reset();
+                  get<SessionModel>().reset();
                   await get<Navigation>().backToApp();
                 } else if (value == 2) {
                   await get<SmartCardService>().toggleMock();
                   get<KeyModel>().reset();
+                  get<SessionModel>().reset();
                   await get<Navigation>().backToApp();
                 }
               }),

@@ -94,7 +94,7 @@ class _GenerateState extends State<Generate> with GetItStateMixin<Generate> {
                               }
                             } on SmartCardException catch (e) {
                               setState(() {
-                                _errorText = e.getError().name;
+                                _errorText = e.error.name;
                               });
                               final tries = await get<SmartCardService>()
                                   .getRemainingPinTries();
