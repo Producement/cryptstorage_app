@@ -130,3 +130,21 @@ dependency_overrides:
     git:
       url: https://github.com/Producement/swagger-dart-code-generator.git
       ref: discriminator
+  cryptography:
+    git:
+      url: https://github.com/Producement/cryptography.git
+      ref: master
+      path: cryptography
+  jwk:
+    git:
+      url: https://github.com/Producement/cryptography.git
+      ref: master
+      path: jwk
+  dage:
+    path: ../dage
+  yubikit_flutter:
+    path: ../yubikit_flutter
+  age_yubikey_pgp:
+    path: ../age-yubikey-pgp
+  yubikit_openpgp:
+    path: ../yubikit-openpgp
