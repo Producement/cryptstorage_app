@@ -8,7 +8,6 @@ import 'package:cryptstorage/model/pin_model.dart';
 import 'package:cryptstorage/model/session_model.dart';
 import 'package:cryptstorage/navigation.dart';
 import 'package:cryptstorage/onboarding/service.dart';
-import 'package:cryptstorage/smartcard/mock_yubikey.dart';
 import 'package:cryptstorage/smartcard/smartcard_service.dart';
 import 'package:cryptstorage/storage/file_downloader.dart';
 import 'package:cryptstorage/storage/file_uploader.dart';
@@ -43,10 +42,8 @@ Future<void> setupInjection() async {
   getIt.registerSingleton(SessionModel());
   getIt.registerSingleton(GlobalKey<NavigatorState>());
   getIt.registerSingleton(Navigation());
-  getIt.registerSingleton(MockYubikitOpenPGP(pinProvider: getIt<PinModel>()));
-  getIt.registerSingleton(
-      YubikitFlutter.openPGP(pinProvider: getIt<PinModel>()));
-  getIt.registerSingleton(SmartCardService());
+  getIt.registerSingleton(SmartCardService(
+      interface: YubikitFlutter.smartCard(), pinProvider: getIt<PinModel>()));
   registerPlugin(getIt<SmartCardService>());
   getIt.registerSingleton(
       FileDownloader(http.Client(), getIt<SmartCardService>()));

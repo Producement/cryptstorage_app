@@ -9,14 +9,17 @@ class SmartCardService implements YubikitOpenPGP {
   final YubikitOpenPGP _yubikitOpenPGP;
   final MockYubikitOpenPGP _mockYubikitOpenPGP;
   final SharedPreferences _preferences;
+  final SmartCardInterface _interface;
 
   SmartCardService(
-      {YubikitOpenPGP? yubikitOpenPGP,
-      MockYubikitOpenPGP? mockYubikitOpenPGP,
+      {SmartCardInterface? interface,
+      PinProvider? pinProvider,
       SharedPreferences? preferences})
-      : _yubikitOpenPGP = yubikitOpenPGP ?? GetIt.I.get(),
+      : _interface = interface ?? GetIt.I.get(),
         _preferences = preferences ?? GetIt.I.get(),
-        _mockYubikitOpenPGP = mockYubikitOpenPGP ?? GetIt.I.get();
+        _yubikitOpenPGP =
+            YubikitFlutter.openPGP(pinProvider: pinProvider ?? GetIt.I.get()),
+        _mockYubikitOpenPGP = MockYubikitOpenPGP(pinProvider: pinProvider);
 
   YubikitOpenPGP getService() {
     if (_preferences.getBool('yubikeyMock') ?? false) {
@@ -32,6 +35,31 @@ class SmartCardService implements YubikitOpenPGP {
 
   bool isMock() {
     return _preferences.getBool('yubikeyMock') ?? false;
+  }
+
+  Future<Map<KeySlot, KeyData?>> getAllKeys() async {
+    const cmds = YubikitOpenPGPCommands();
+    final commands = [
+      cmds.getAsymmetricPublicKey(KeySlot.signature),
+      cmds.getAsymmetricPublicKey(KeySlot.encryption),
+      cmds.getAsymmetricPublicKey(KeySlot.authentication),
+    ];
+    final results =
+        await _interface.sendCommands(Application.openpgp, commands);
+    final result = await results.toList();
+    final entries = <MapEntry<KeySlot, KeyData?>>[];
+    entries.add(_keyEntry(KeySlot.signature, result[0]));
+    entries.add(_keyEntry(KeySlot.encryption, result[1]));
+    entries.add(_keyEntry(KeySlot.authentication, result[2]));
+    return Map.fromEntries(entries);
+  }
+
+  MapEntry<KeySlot, KeyData?> _keyEntry(
+      KeySlot keySlot, SmartCardResponse response) {
+    if (response is SuccessfulResponse) {
+      return MapEntry(keySlot, KeyData.fromBytes(response.response, keySlot));
+    }
+    return MapEntry(keySlot, null);
   }
 
   @override

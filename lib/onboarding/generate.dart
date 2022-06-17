@@ -31,15 +31,9 @@ class _GenerateState extends State<Generate> with GetItStateMixin<Generate> {
   @override
   void initState() {
     super.initState();
-    get<SmartCardService>().getRemainingPinTries().then((tries) {
-      debugPrint(
-          'Pin tries: pin ${tries.pin}, reset ${tries.reset}, admin ${tries.admin}');
-      setState(() {
-        _adminPinTries = tries.admin;
-      });
-    });
     _showPin = false;
     _loading = false;
+    _adminPinTries = 0;
   }
 
   @override

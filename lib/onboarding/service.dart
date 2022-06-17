@@ -16,10 +16,9 @@ class OnboardingService {
   Future<bool> fetchKeyInfo() async {
     logger.info('Fetching key info');
     _keyModel.reset();
-    final signaturePublicKey =
-        await _smartCardService.getPublicKey(KeySlot.signature);
-    final encryptionPublicKey =
-        await _smartCardService.getPublicKey(KeySlot.encryption);
+    final keys = await _smartCardService.getAllKeys();
+    final signaturePublicKey = keys[KeySlot.signature];
+    final encryptionPublicKey = keys[KeySlot.encryption];
     if (signaturePublicKey != null) {
       logger.info('Signature key present');
       _keyModel.signaturePublicKey = signaturePublicKey.toJwk();
