@@ -143,17 +143,17 @@ dependency_overrides:
       path: jwk
   dage:
     git:
-      url: git@github.com:Producement/dage.git
+      url: https://github.com/Producement/dage.git
       ref: main
   yubikit_flutter:
     git:
-      url: git@github.com:Producement/yubikit_flutter.git
+      url: https://github.com/Producement/yubikit_flutter.git
       ref: main
   age_yubikey_pgp:
     git:
-      url: git@github.com:Producement/age-yubikey-pgp.git
+      url: https://github.com/Producement/age-yubikey-pgp.git
       ref: main
   yubikit_openpgp:
     git:
-      url: git@github.com:Producement/yubikit-openpgp.git
+      url: https://github.com/Producement/yubikit-openpgp.git
       ref: main
