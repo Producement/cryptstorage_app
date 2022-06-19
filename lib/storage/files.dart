@@ -25,7 +25,7 @@ class Files extends StatelessWidget with GetItMixin {
           child: ListView.builder(
             itemCount: _files.length,
             itemBuilder: (context, index) {
-              var currentFile = _files[index];
+              final currentFile = _files[index];
               return Card(
                   child: ListTile(
                       leading: Column(

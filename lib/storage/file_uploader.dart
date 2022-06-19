@@ -21,15 +21,15 @@ class FileUploader {
   FileUploader(this._keyModel, this._keyService, this._fileService);
 
   Future<void> pickEncryptAndUploadFile() async {
-    var filePickerResult = await FilePicker.platform.pickFiles();
+    final filePickerResult = await FilePicker.platform.pickFiles();
 
     if (filePickerResult != null) {
       final platformFile = filePickerResult.files.single;
-      File file = File(platformFile.path!);
+      final File file = File(platformFile.path!);
       logger.fine('Picked file: $file');
       final encryptionPublicKey = _keyModel.encryptionPublicKey!;
       await _keyService.addEncryptionPublicKeyIfMissing(encryptionPublicKey);
-      List<AgeRecipient> recipients = await _getRecipients();
+      final List<AgeRecipient> recipients = await _getRecipients();
       logger.info('Recipients: ${recipients.length}');
       final encryptedStream = encrypt(file.openRead(), recipients);
       final encryptedFile = (await encryptedStream.toList()).flattened.toList();

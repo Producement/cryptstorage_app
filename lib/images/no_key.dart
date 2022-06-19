@@ -21,7 +21,7 @@ class NoKeyImage extends StatelessWidget {
 class CrossPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    var paint = Paint()
+    final paint = Paint()
       ..color = Colors.black
       ..strokeWidth = 4;
     canvas.drawLine(

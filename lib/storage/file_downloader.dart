@@ -18,19 +18,19 @@ class FileDownloader {
 
   Future<String> downloadAndSaveFile(ApiFile apiFile) async {
     final fileBytes = await downloadFile(apiFile);
-    bool status = await Permission.storage.isGranted;
+    final bool status = await Permission.storage.isGranted;
     if (!status) await Permission.storage.request();
-    String directory = await _getSaveDirectory();
-    var path = '$directory/${apiFile.name}';
+    final String directory = await _getSaveDirectory();
+    final path = '$directory/${apiFile.name}';
     debugPrint('Saving file to: $path');
-    File file = File(path);
+    final File file = File(path);
     await file.writeAsBytes(fileBytes);
     return path;
   }
 
   Future<String> downloadDecryptAndCacheFile(ApiFile apiFile) async {
     final encryptedFile = await downloadFile(apiFile);
-    var recipientFromCard =
+    final recipientFromCard =
         await YubikeyPgpX25519AgePlugin.fromCard(_smartCardService) ??
             await YubikeyPgpRsaAgePlugin.fromCard(_smartCardService);
     if (recipientFromCard == null) {
@@ -38,12 +38,12 @@ class FileDownloader {
     }
     final decrypted =
         decrypt(Stream.value(encryptedFile), [recipientFromCard.asKeyPair()]);
-    var decryptedBytes = (await decrypted.toList()).flattened.toList();
+    final decryptedBytes = (await decrypted.toList()).flattened.toList();
 
     final directory = await getTemporaryDirectory();
-    var path = '${directory.path}/${apiFile.name}';
+    final path = '${directory.path}/${apiFile.name}';
     debugPrint('Saving file to: $path');
-    File file = File(path);
+    final File file = File(path);
     await file.writeAsBytes(decryptedBytes);
     return path;
   }
@@ -59,7 +59,7 @@ class FileDownloader {
   }
 
   Future<List<int>> downloadFile(ApiFile apiFile) async {
-    var response = await _httpClient.get(Uri.parse(apiFile.url));
+    final response = await _httpClient.get(Uri.parse(apiFile.url));
     return response.bodyBytes;
   }
 }

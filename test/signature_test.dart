@@ -40,7 +40,7 @@ void main() {
     final signature = pc.RSASignature(base64Url.decode(tokenParts[2]));
     final pubKey = pc.RSAPublicKey(BigInt.parse(hex.encode(modulus), radix: 16),
         BigInt.parse(hex.encode(exponent), radix: 16));
-    pc.AsymmetricKeyParameter<pc.RSAPublicKey> param =
+    final pc.AsymmetricKeyParameter<pc.RSAPublicKey> param =
         pc.PublicKeyParameter(pubKey);
     signer.init(false, param);
     final isValid = signer.verifySignature(

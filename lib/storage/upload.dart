@@ -45,7 +45,7 @@ class _UploadState extends State<Upload> with GetItStateMixin {
             return const Loader();
           }
 
-          var button = Button(
+          final button = Button(
               title: 'Upload',
               onPressed: () async {
                 try {

@@ -17,7 +17,7 @@ void main() {
         url: 'https://s3/filename.txt',
         createdAt: DateTime.now());
 
-    var fileBytes = await fileDownloader.downloadFile(apiFile);
+    final fileBytes = await fileDownloader.downloadFile(apiFile);
 
     expect(utf8.decode(fileBytes), equals('file content'));
   });

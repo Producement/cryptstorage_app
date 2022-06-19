@@ -23,7 +23,7 @@ class KeyService {
   Future<ApiKey> addEncryptionPublicKey(jwk.Jwk encryptionPublicKey) async {
     logger.info('Adding new encryption key: $encryptionPublicKey');
     final jwk = _encryptionPublicKeyToJwk(encryptionPublicKey);
-    var response =
+    final response =
         await _openApi.keysPost(body: ApiAddKeyRequest(content: jwk));
     return response.body!;
   }

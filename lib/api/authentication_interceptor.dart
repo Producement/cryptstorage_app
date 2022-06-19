@@ -36,7 +36,7 @@ class AuthenticationInterceptor implements RequestInterceptor {
 
   String? verifiedToken(String accessToken) {
     final parts = accessToken.split('.');
-    dynamic payload = jsonBase64.decode(_base64Padded(parts[1]));
+    final dynamic payload = jsonBase64.decode(_base64Padded(parts[1]));
     final exp = DateTime.fromMillisecondsSinceEpoch(
       payload['exp'] * 1000,
     );
