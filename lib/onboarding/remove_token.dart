@@ -35,7 +35,9 @@ class _RemoveTokenState extends State<RemoveToken> with GetItStateMixin {
         _loading = false;
       });
     }).catchError((error) {
-      _loading = false;
+      setState(() {
+        _loading = false;
+      });
     });
   }
 
