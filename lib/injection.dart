@@ -14,6 +14,7 @@ import 'package:cryptstorage/storage/file_uploader.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yubikit_flutter/yubikit_flutter.dart';
 
@@ -33,10 +34,17 @@ ChopperClient createClient(
   );
 }
 
+HeadersInterceptor headersInterceptor(PackageInfo packageInfo) {
+  final userAgent =
+      'Cryptstorage/${packageInfo.version}+${packageInfo.buildNumber}';
+  return HeadersInterceptor({'User-Agent': userAgent});
+}
+
 Future<void> setupInjection() async {
   await getIt.reset();
   final prefs = await SharedPreferences.getInstance();
   getIt.registerSingleton(prefs);
+  getIt.registerSingleton(await PackageInfo.fromPlatform());
   getIt.registerSingleton(PinModel());
   getIt.registerSingleton(KeyModel());
   getIt.registerSingleton(SessionModel());
@@ -49,12 +57,18 @@ Future<void> setupInjection() async {
       FileDownloader(http.Client(), getIt<SmartCardService>()));
 
   // Services
-  final publicClient = createClient(interceptors: [HttpLoggingInterceptor()]);
+  final publicClient = createClient(interceptors: [
+    HttpLoggingInterceptor(),
+    headersInterceptor(GetIt.I.get())
+  ]);
   final tokenService =
       TokenService(openApi: Openapi.create(client: publicClient));
   getIt.registerSingleton(tokenService);
-  final authenticatedClient = createClient(
-      interceptors: [AuthenticationInterceptor(), HttpLoggingInterceptor()]);
+  final authenticatedClient = createClient(interceptors: [
+    AuthenticationInterceptor(),
+    HttpLoggingInterceptor(),
+    headersInterceptor(GetIt.I.get())
+  ]);
   getIt.registerSingleton(Openapi.create(client: authenticatedClient));
   getIt.registerSingleton(OnboardingService());
   getIt.registerSingleton(KeyService());
