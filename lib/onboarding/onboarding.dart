@@ -37,7 +37,7 @@ class Onboarding extends StatelessWidget with GetItMixin {
       Button(
         icon: SvgPicture.asset('assets/images/contactless_indicator.svg',
             semanticsLabel: 'NFC', height: 16),
-        title: 'Use NFC',
+        title: 'Scan using NFC',
         onPressed: _handlePress,
       ),
     ]));
