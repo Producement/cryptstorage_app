@@ -15,6 +15,6 @@ void main() {
     WidgetsFlutterBinding.ensureInitialized();
     await tester.pumpWidget(App());
 
-    expect(find.text('Insert Yubikey'), findsOneWidget);
+    expect(find.text('Powered by YubiKey.'), findsOneWidget);
   });
 }
