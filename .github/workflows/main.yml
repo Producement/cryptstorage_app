@@ -15,25 +15,21 @@ jobs:
       with:
         channel: 'stable'
 
-    # Download all Flutter packages
     - name: Download dependencies
       run: flutter pub get
 
     - name: Generate code
       run: flutter pub run build_runner build --delete-conflicting-outputs
 
-    # Check for any formatting issues in the code.
-    - name: check code format
+    - name: Check code format
       run: flutter format --set-exit-if-changed .
 
-    # Run Flutter Analyzer
     - name: Run Flutter Analyzer
       run: flutter analyze
 
-    # Run all unit-tests with code coverage
     - name: Run unit tests
       run: flutter test --coverage
-  build_apk:
+  build_deploy_apk:
     runs-on: linux
     needs: [check]
     steps:
@@ -55,12 +51,17 @@ jobs:
     - run: flutter pub get
     - run: flutter pub run build_runner build --delete-conflicting-outputs
     - run: flutter build appbundle
-    - name: 'Upload Android Artifact'
-      uses: actions/upload-artifact@v3
+    - name: Create Google Play Config file
+      run: |
+        echo "$PLAY_CONFIG_JSON" > play_config.json.b64
+        base64 -d -i play_config.json.b64 > play_config.json
+      env:
+        PLAY_CONFIG_JSON: ${{ secrets.PLAY_CONFIG_JSON }}
+    - uses: maierj/fastlane-action@v2.2.1
       with:
-        name: app-release.aab
-        path: build/app/outputs/bundle/release/app-release.aab
-        retention-days: 7
+        lane: 'beta'
+        subdirectory: 'android'
+        bundle-install-path: 'vendor/bundle'
   build_ios:
     runs-on: macOS
     needs: [check]
@@ -76,54 +77,9 @@ jobs:
     - run: flutter pub get
     - run: flutter pub run build_runner build --delete-conflicting-outputs
     - run: flutter build ios --release --no-codesign
-    - name: 'Upload iOS Artifact'
-      uses: actions/upload-artifact@v3
-      with:
-        name: Runner.app
-        path: build/ios/iphoneos/Runner.app
-        retention-days: 7
-  deploy_ios:
-    name: Deploy iOS Beta
-    needs: [build_ios]
-    runs-on: macOS
-    concurrency: ios-deploy
-    if: ${{ false }} # Signing is broken currently
-    steps:
-     - uses: actions/checkout@v3
-     - uses: actions/download-artifact@v3
-       with:
-         name: Runner.app
-         path: build/ios/iphoneos
-     - uses: maierj/fastlane-action@v2.2.1
-       with:
-         lane: 'beta'
-         subdirectory: 'ios'
-         bundle-install-path: 'vendor/bundle'
-  deploy_apk:
-    name: Deploy Android Beta
-    needs: [build_apk]
-    runs-on: linux
-    concurrency: android-deploy
-    steps:
-     - uses: actions/checkout@v3
-     - uses: actions/download-artifact@v3
-       with:
-         name: app-release.aab
-         path: build/app/outputs/bundle/release
-     - name: Create Google Play Config file
-       run: |
-         echo "$PLAY_CONFIG_JSON" > play_config.json.b64
-         base64 -d -i play_config.json.b64 > play_config.json
-       env:
-         PLAY_CONFIG_JSON: ${{ secrets.PLAY_CONFIG_JSON }}
-     - uses: maierj/fastlane-action@v2.2.1
-       with:
-         lane: 'beta'
-         subdirectory: 'android'
-         bundle-install-path: 'vendor/bundle'
   release:
     runs-on: linux
-    needs: [deploy_ios, deploy_apk]
+    needs: [deploy_ios, build_deploy_apk]
     steps:
     - uses: actions/checkout@v3
     - name: Create Sentry release
