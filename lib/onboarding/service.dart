@@ -30,21 +30,26 @@ class OnboardingService {
     return _keyModel.isKeyInitialised;
   }
 
-  Future<bool> generateSignatureKey() async {
-    if (_keyModel.signaturePublicKey == null) {
-      logger.info('Generating signature key');
-      final signaturePublicKey = await _smartCardService.generateECKey(
-          KeySlot.signature, ECCurve.ed25519);
+  Future<bool> generateMissingKeys() async {
+    final slots = <MapEntry<KeySlot, ECCurve>>[
+      ...(_keyModel.signaturePublicKey == null
+          ? [const MapEntry(KeySlot.signature, ECCurve.ed25519)]
+          : []),
+      ...(_keyModel.encryptionPublicKey == null
+          ? [const MapEntry(KeySlot.encryption, ECCurve.x25519)]
+          : [])
+    ];
+    logger.info('Missing keys $slots');
+    final results =
+        await _smartCardService.generateECKeys(Map.fromEntries(slots));
+    if (results.containsKey(KeySlot.signature)) {
+      logger.info('Generated signature key');
+      final signaturePublicKey = results[KeySlot.signature]!;
       _keyModel.signaturePublicKey = signaturePublicKey.toJwk();
     }
-    return _keyModel.isKeyInitialised;
-  }
-
-  Future<bool> generateEncryptionKey() async {
-    if (_keyModel.encryptionPublicKey == null) {
-      logger.info('Generating encryption key');
-      final encryptionPublicKey = await _smartCardService.generateECKey(
-          KeySlot.encryption, ECCurve.x25519);
+    if (results.containsKey(KeySlot.encryption)) {
+      logger.info('Generated encryption key');
+      final encryptionPublicKey = results[KeySlot.encryption]!;
       _keyModel.encryptionPublicKey = encryptionPublicKey.toJwk();
     }
     return _keyModel.isKeyInitialised;

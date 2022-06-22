@@ -7,7 +7,7 @@ import 'package:jwk/jwk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yubikit_flutter/yubikit_flutter.dart';
 
-class MockYubikitOpenPGP implements YubikitOpenPGP {
+class MockYubikitOpenPGP implements YubikitOpenPGP, YubikitOpenPGPBatch {
   static const mockSigningKeyPreference = 'mockSigningKey';
   static const mockEncryptionKeyPreference = 'mockEncryptionKey';
   final PinProvider _pinProvider;
@@ -192,5 +192,31 @@ class MockYubikitOpenPGP implements YubikitOpenPGP {
       KeySlot.signature: await getPublicKey(KeySlot.signature),
       KeySlot.encryption: await getPublicKey(KeySlot.encryption),
     };
+  }
+
+  @override
+  Future<Map<KeySlot, ECKeyData>> generateECKeys(
+      Map<KeySlot, ECCurve> slots) async {
+    final entries = await Future.wait(slots.entries.map((e) async {
+      return MapEntry(e.key, await generateECKey(e.key, e.value));
+    }));
+    return Map.fromEntries(entries);
+  }
+
+  @override
+  Future<Map<KeySlot, KeyData?>> getKeys(List<KeySlot> keySlots) async {
+    final entries = await Future.wait(keySlots.map((slot) async {
+      return MapEntry(slot, await getPublicKey(slot));
+    }));
+    return Map.fromEntries(entries);
+  }
+
+  @override
+  Future<Map<KeySlot, RSAKeyData>> generateRSAKeys(
+      Map<KeySlot, int> rsaParams) async {
+    final entries = await Future.wait(rsaParams.entries.map((e) async {
+      return MapEntry(e.key, await generateRSAKey(e.key, e.value));
+    }));
+    return Map.fromEntries(entries);
   }
 }

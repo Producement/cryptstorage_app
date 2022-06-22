@@ -80,19 +80,10 @@ class _GenerateState extends State<Generate> with GetItStateMixin<Generate> {
                             try {
                               setState(() {
                                 _loading = true;
-                                _statusMessage = 'Generating new signing key';
+                                _statusMessage = 'Generating new keys';
                               });
-                              var initialised = await get<OnboardingService>()
-                                  .generateSignatureKey();
-                              if (initialised) {
-                                await get<Navigation>().goToRemoveToken();
-                              }
-                              setState(() {
-                                _statusMessage =
-                                    'Generating new encryption key';
-                              });
-                              initialised = await get<OnboardingService>()
-                                  .generateEncryptionKey();
+                              final initialised = await get<OnboardingService>()
+                                  .generateMissingKeys();
                               if (initialised) {
                                 await get<Navigation>().goToRemoveToken();
                               }
