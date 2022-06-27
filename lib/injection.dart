@@ -21,7 +21,9 @@ import 'package:yubikit_flutter/yubikit_flutter.dart';
 import 'api/token_service.dart';
 import 'generated/openapi.swagger.dart';
 
+// const baseUrl = 'https://86b0-194-126-126-242.eu.ngrok.io/api/v1';
 const baseUrl = 'https://cryptstorage.fly.dev/api/v1';
+
 final getIt = GetIt.instance;
 
 ChopperClient createClient(

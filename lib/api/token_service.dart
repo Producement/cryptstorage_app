@@ -18,11 +18,15 @@ class TokenService {
 
   Future<String> getSignedToken(jwk.Jwk signaturePublicKey) async {
     logger.info('Getting signed token with ${signaturePublicKey.toJson()}');
-    final tokenToSign = await _openApi.tokenGet(
+    final response = await _openApi.tokenGet(
         signaturePublicKey:
             base64UrlEncode(signaturePublicKey.toUtf8()).split('=')[0]);
+    if (!response.isSuccessful) {
+      throw Exception(
+          'Getting the token to sign failed: ${response.statusCode} ${response.error}');
+    }
     return await _sign(
-        tokenToSign.body!.tokenToSign, signaturePublicKey.kty == 'RSA');
+        response.body!.tokenToSign, signaturePublicKey.kty == 'RSA');
   }
 
   Future<String> _sign(String token, bool rsa) async {

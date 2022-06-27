@@ -14,7 +14,12 @@ class FileService {
   }
 
   Future<ApiFile> addFile(String fileName, List<int> file) async {
-    return (await _openApi.filesPost(filename: fileName, file: file)).body!;
+    final response = await _openApi.filesPost(filename: fileName, file: file);
+    if (!response.isSuccessful) {
+      throw Exception(
+          'Adding the file failed: ${response.statusCode} ${response.error}');
+    }
+    return response.body!;
   }
 
   Future<void> deleteFile(String fileId) async {

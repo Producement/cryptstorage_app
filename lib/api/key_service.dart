@@ -17,6 +17,10 @@ class KeyService {
   Future<List<Jwk>> getKeys() async {
     logger.info('Getting keys');
     final response = await _openApi.keysGet();
+    if (!response.isSuccessful) {
+      throw Exception(
+          'Getting the keys failed: ${response.statusCode} ${response.error}');
+    }
     return response.body!.map((e) => e.content).toList();
   }
 
@@ -25,6 +29,10 @@ class KeyService {
     final jwk = _encryptionPublicKeyToJwk(encryptionPublicKey);
     final response =
         await _openApi.keysPost(body: ApiAddKeyRequest(content: jwk));
+    if (!response.isSuccessful) {
+      throw Exception(
+          'Adding the key failed: ${response.statusCode} ${response.error}');
+    }
     return response.body!;
   }
 
