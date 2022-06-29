@@ -90,7 +90,26 @@ class MockYubikitOpenPGP implements YubikitOpenPGP, YubikitOpenPGPBatch {
     if (jwk == null) {
       return null;
     }
-    return Jwk.fromJson(json.decode(jwk)).toKeyPair();
+    return _toKeyPair(Jwk.fromJson(json.decode(jwk)));
+  }
+
+  static KeyPair _toKeyPair(Jwk jwk) {
+    if (jwk.crv == 'Ed25519') {
+      return SimpleKeyPair.lazy(
+        () async {
+          return Ed25519().newKeyPairFromSeed(jwk.x!);
+        },
+      );
+    }
+    if (jwk.crv == 'X25519') {
+      return SimpleKeyPair.lazy(
+        () async {
+          return X25519().newKeyPairFromSeed(jwk.x!);
+        },
+      );
+    } else {
+      throw Exception('Curve ${jwk.crv} not supported!');
+    }
   }
 
   @override

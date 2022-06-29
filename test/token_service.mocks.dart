@@ -21,16 +21,19 @@ import 'package:yubikit_flutter/yubikit_flutter.dart' as _i2;
 
 class _FakeYubikitOpenPGP_0 extends _i1.Fake implements _i2.YubikitOpenPGP {}
 
-class _FakePinRetries_1 extends _i1.Fake implements _i2.PinRetries {}
+class _FakeYubikitOpenPGPBatch_1 extends _i1.Fake
+    implements _i2.YubikitOpenPGPBatch {}
 
-class _FakeApplicationVersion_2 extends _i1.Fake
+class _FakePinRetries_2 extends _i1.Fake implements _i2.PinRetries {}
+
+class _FakeApplicationVersion_3 extends _i1.Fake
     implements _i2.ApplicationVersion {}
 
-class _FakeOpenPGPVersion_3 extends _i1.Fake implements _i2.OpenPGPVersion {}
+class _FakeOpenPGPVersion_4 extends _i1.Fake implements _i2.OpenPGPVersion {}
 
-class _FakeECKeyData_4 extends _i1.Fake implements _i2.ECKeyData {}
+class _FakeECKeyData_5 extends _i1.Fake implements _i2.ECKeyData {}
 
-class _FakeRSAKeyData_5 extends _i1.Fake implements _i2.RSAKeyData {}
+class _FakeRSAKeyData_6 extends _i1.Fake implements _i2.RSAKeyData {}
 
 /// A class which mocks [SmartCardService].
 ///
@@ -44,6 +47,10 @@ class MockSmartCardService extends _i1.Mock implements _i3.SmartCardService {
   _i2.YubikitOpenPGP getService() =>
       (super.noSuchMethod(Invocation.method(#getService, []),
           returnValue: _FakeYubikitOpenPGP_0()) as _i2.YubikitOpenPGP);
+  @override
+  _i2.YubikitOpenPGPBatch getBatchService() => (super.noSuchMethod(
+      Invocation.method(#getBatchService, []),
+      returnValue: _FakeYubikitOpenPGPBatch_1()) as _i2.YubikitOpenPGPBatch);
   @override
   _i4.Future<void> toggleMock() =>
       (super.noSuchMethod(Invocation.method(#toggleMock, []),
@@ -62,7 +69,7 @@ class MockSmartCardService extends _i1.Mock implements _i3.SmartCardService {
   @override
   _i4.Future<_i2.PinRetries> getRemainingPinTries() =>
       (super.noSuchMethod(Invocation.method(#getRemainingPinTries, []),
-              returnValue: Future<_i2.PinRetries>.value(_FakePinRetries_1()))
+              returnValue: Future<_i2.PinRetries>.value(_FakePinRetries_2()))
           as _i4.Future<_i2.PinRetries>);
   @override
   _i4.Future<void> reset() => (super.noSuchMethod(Invocation.method(#reset, []),
@@ -77,28 +84,30 @@ class MockSmartCardService extends _i1.Mock implements _i3.SmartCardService {
   _i4.Future<_i2.ApplicationVersion> getApplicationVersion() =>
       (super.noSuchMethod(Invocation.method(#getApplicationVersion, []),
               returnValue: Future<_i2.ApplicationVersion>.value(
-                  _FakeApplicationVersion_2()))
+                  _FakeApplicationVersion_3()))
           as _i4.Future<_i2.ApplicationVersion>);
   @override
   _i4.Future<_i2.OpenPGPVersion> getOpenPGPVersion() =>
       (super.noSuchMethod(Invocation.method(#getOpenPGPVersion, []),
               returnValue:
-                  Future<_i2.OpenPGPVersion>.value(_FakeOpenPGPVersion_3()))
+                  Future<_i2.OpenPGPVersion>.value(_FakeOpenPGPVersion_4()))
           as _i4.Future<_i2.OpenPGPVersion>);
   @override
-  _i4.Future<_i2.TouchMode> getTouch(_i2.KeySlot? keySlot) =>
-      (super.noSuchMethod(Invocation.method(#getTouch, [keySlot]),
+  _i4.Future<_i2.TouchMode> getTouchMode(_i2.KeySlot? keySlot) =>
+      (super.noSuchMethod(Invocation.method(#getTouchMode, [keySlot]),
               returnValue: Future<_i2.TouchMode>.value(_i2.TouchMode.off))
           as _i4.Future<_i2.TouchMode>);
   @override
-  _i4.Future<void> setPinRetries(int? pw1Tries, int? pw2Tries, int? pw3Tries) =>
+  _i4.Future<void> setRemainingPinTries(
+          int? pw1Tries, int? pw2Tries, int? pw3Tries) =>
       (super.noSuchMethod(
-          Invocation.method(#setPinRetries, [pw1Tries, pw2Tries, pw3Tries]),
+          Invocation.method(
+              #setRemainingPinTries, [pw1Tries, pw2Tries, pw3Tries]),
           returnValue: Future<void>.value(),
           returnValueForMissingStub: Future<void>.value()) as _i4.Future<void>);
   @override
-  _i4.Future<void> setTouch(_i2.KeySlot? keySlot, _i2.TouchMode? mode) =>
-      (super.noSuchMethod(Invocation.method(#setTouch, [keySlot, mode]),
+  _i4.Future<void> setTouchMode(_i2.KeySlot? keySlot, _i2.TouchMode? mode) =>
+      (super.noSuchMethod(Invocation.method(#setTouchMode, [keySlot, mode]),
           returnValue: Future<void>.value(),
           returnValueForMissingStub: Future<void>.value()) as _i4.Future<void>);
   @override
@@ -111,14 +120,14 @@ class MockSmartCardService extends _i1.Mock implements _i3.SmartCardService {
           _i2.KeySlot? keySlot, _i2.ECCurve? curve, [int? timestamp]) =>
       (super.noSuchMethod(
               Invocation.method(#generateECKey, [keySlot, curve, timestamp]),
-              returnValue: Future<_i2.ECKeyData>.value(_FakeECKeyData_4()))
+              returnValue: Future<_i2.ECKeyData>.value(_FakeECKeyData_5()))
           as _i4.Future<_i2.ECKeyData>);
   @override
   _i4.Future<_i2.RSAKeyData> generateRSAKey(_i2.KeySlot? keySlot, int? keySize,
           [int? timestamp]) =>
       (super.noSuchMethod(
               Invocation.method(#generateRSAKey, [keySlot, keySize, timestamp]),
-              returnValue: Future<_i2.RSAKeyData>.value(_FakeRSAKeyData_5()))
+              returnValue: Future<_i2.RSAKeyData>.value(_FakeRSAKeyData_6()))
           as _i4.Future<_i2.RSAKeyData>);
   @override
   _i4.Future<_i2.KeyData?> getPublicKey(_i2.KeySlot? keySlot) =>
@@ -135,4 +144,25 @@ class MockSmartCardService extends _i1.Mock implements _i3.SmartCardService {
       (super.noSuchMethod(Invocation.method(#decipher, [ciphertext]),
               returnValue: Future<_i5.Uint8List>.value(_i5.Uint8List(0)))
           as _i4.Future<_i5.Uint8List>);
+  @override
+  _i4.Future<Map<_i2.KeySlot, _i2.ECKeyData>> generateECKeys(
+          Map<_i2.KeySlot, _i2.ECCurve>? slots) =>
+      (super.noSuchMethod(Invocation.method(#generateECKeys, [slots]),
+              returnValue: Future<Map<_i2.KeySlot, _i2.ECKeyData>>.value(
+                  <_i2.KeySlot, _i2.ECKeyData>{}))
+          as _i4.Future<Map<_i2.KeySlot, _i2.ECKeyData>>);
+  @override
+  _i4.Future<Map<_i2.KeySlot, _i2.KeyData?>> getKeys(
+          List<_i2.KeySlot>? keySlots) =>
+      (super.noSuchMethod(Invocation.method(#getKeys, [keySlots]),
+              returnValue: Future<Map<_i2.KeySlot, _i2.KeyData?>>.value(
+                  <_i2.KeySlot, _i2.KeyData?>{}))
+          as _i4.Future<Map<_i2.KeySlot, _i2.KeyData?>>);
+  @override
+  _i4.Future<Map<_i2.KeySlot, _i2.RSAKeyData>> generateRSAKeys(
+          Map<_i2.KeySlot, int>? rsaParams) =>
+      (super.noSuchMethod(Invocation.method(#generateRSAKeys, [rsaParams]),
+              returnValue: Future<Map<_i2.KeySlot, _i2.RSAKeyData>>.value(
+                  <_i2.KeySlot, _i2.RSAKeyData>{}))
+          as _i4.Future<Map<_i2.KeySlot, _i2.RSAKeyData>>);
 }
