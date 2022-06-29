@@ -34,10 +34,10 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  yubikit_flutter: ^0.0.31
+  yubikit_flutter: ^0.0.32
   flutter_svg: ^1.0.3
-  dage: ^1.0.6
-  age_yubikey_pgp: ^0.0.9
+  dage: ^1.0.7
+  age_yubikey_pgp: ^0.0.10
   get_it: ^7.2.0
   get_it_mixin: ^3.1.4
   sentry_flutter: ^6.5.1
@@ -62,6 +62,7 @@ dependencies:
   flutter_launcher_icons_maker: ^0.10.2
   package_info_plus: ^1.4.2
   alert_dialog: ^1.0.1
+  cryptography_flutter: ^2.0.2
 
 dev_dependencies:
   test: ^1.19.5
@@ -133,16 +134,6 @@ dependency_overrides:
     git:
       url: https://github.com/Producement/swagger-dart-code-generator.git
       ref: discriminator
-  cryptography:
-    git:
-      url: https://github.com/Producement/cryptography.git
-      ref: master
-      path: cryptography
-  jwk:
-    git:
-      url: https://github.com/Producement/cryptography.git
-      ref: master
-      path: jwk
   dage:
     git:
       url: https://github.com/Producement/dage.git

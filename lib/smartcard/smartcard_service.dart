@@ -72,15 +72,15 @@ class SmartCardService implements YubikitOpenPGP, YubikitOpenPGPBatch {
       getService().getOpenPGPVersion();
 
   @override
-  Future<TouchMode> getTouch(KeySlot keySlot) => getService().getTouch(keySlot);
+  Future<TouchMode> getTouchMode(KeySlot keySlot) => getService().getTouchMode(keySlot);
 
   @override
-  Future<void> setPinRetries(int pw1Tries, int pw2Tries, int pw3Tries) =>
-      getService().setPinRetries(pw1Tries, pw2Tries, pw3Tries);
+  Future<void> setRemainingPinTries(int pw1Tries, int pw2Tries, int pw3Tries) =>
+      getService().setRemainingPinTries(pw1Tries, pw2Tries, pw3Tries);
 
   @override
-  Future<void> setTouch(KeySlot keySlot, TouchMode mode) =>
-      getService().setTouch(keySlot, mode);
+  Future<void> setTouchMode(KeySlot keySlot, TouchMode mode) =>
+      getService().setTouchMode(keySlot, mode);
 
   @override
   Future<Uint8List> ecSign(List<int> data) => getService().ecSign(data);

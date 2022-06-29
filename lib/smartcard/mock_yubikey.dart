@@ -123,7 +123,7 @@ class MockYubikitOpenPGP implements YubikitOpenPGP, YubikitOpenPGPBatch {
   }
 
   @override
-  Future<TouchMode> getTouch(KeySlot keySlot) {
+  Future<TouchMode> getTouchMode(KeySlot keySlot) {
     throw UnimplementedError();
   }
 
@@ -138,12 +138,12 @@ class MockYubikitOpenPGP implements YubikitOpenPGP, YubikitOpenPGPBatch {
   }
 
   @override
-  Future<void> setPinRetries(int pw1Tries, int pw2Tries, int pw3Tries) {
+  Future<void> setRemainingPinTries(int pw1Tries, int pw2Tries, int pw3Tries) {
     throw UnimplementedError();
   }
 
   @override
-  Future<void> setTouch(KeySlot keySlot, TouchMode mode) {
+  Future<void> setTouchMode(KeySlot keySlot, TouchMode mode) {
     throw UnimplementedError();
   }
 

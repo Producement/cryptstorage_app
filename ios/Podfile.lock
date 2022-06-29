@@ -1,4 +1,6 @@
 PODS:
+  - cryptography_flutter (0.1.0):
+    - Flutter
   - DKImagePickerController/Core (4.3.3):
     - DKImagePickerController/ImageDataManager
     - DKImagePickerController/Resource
@@ -42,16 +44,16 @@ PODS:
     - Flutter
   - permission_handler_apple (9.0.4):
     - Flutter
-  - SDWebImage (5.12.6):
-    - SDWebImage/Core (= 5.12.6)
-  - SDWebImage/Core (5.12.6)
-  - Sentry (7.11.0):
-    - Sentry/Core (= 7.11.0)
-  - Sentry/Core (7.11.0)
+  - SDWebImage (5.13.0):
+    - SDWebImage/Core (= 5.13.0)
+  - SDWebImage/Core (5.13.0)
+  - Sentry (7.18.1):
+    - Sentry/Core (= 7.18.1)
+  - Sentry/Core (7.18.1)
   - sentry_flutter (0.0.1):
     - Flutter
     - FlutterMacOS
-    - Sentry (~> 7.11.0)
+    - Sentry (~> 7.18.0)
   - shared_preferences_ios (0.0.1):
     - Flutter
   - SwiftyGif (5.4.3)
@@ -61,6 +63,7 @@ PODS:
     - YubiKit (~> 4.2.0)
 
 DEPENDENCIES:
+  - cryptography_flutter (from `.symlinks/plugins/cryptography_flutter/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - Flutter (from `Flutter`)
   - open_file (from `.symlinks/plugins/open_file/ios`)
@@ -81,6 +84,8 @@ SPEC REPOS:
     - YubiKit
 
 EXTERNAL SOURCES:
+  cryptography_flutter:
+    :path: ".symlinks/plugins/cryptography_flutter/ios"
   file_picker:
     :path: ".symlinks/plugins/file_picker/ios"
   Flutter:
@@ -101,6 +106,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/yubikit_flutter/ios"
 
 SPEC CHECKSUMS:
+  cryptography_flutter: a2c541ba25ff28549f989f856dde126c961defcd
   DKImagePickerController: 72fd378f244cef3d27288e0aebf217a4467e4012
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   file_picker: 817ab1d8cd2da9d2da412a417162deee3500fc95
@@ -109,9 +115,9 @@ SPEC CHECKSUMS:
   package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
   path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
   permission_handler_apple: 44366e37eaf29454a1e7b1b7d736c2cceaeb17ce
-  SDWebImage: a47aea9e3d8816015db4e523daff50cfd294499d
-  Sentry: 0c5cd63d714187b4a39c331c1f0eb04ba7868341
-  sentry_flutter: efb3df2c203cd03aad255892a8d628a458656d14
+  SDWebImage: 0327043dbb9533e75f2eff8445b3df0f2ceca6ac
+  Sentry: 2d70348d6247a29702a8317e710c5ba890672df5
+  sentry_flutter: b635e75d735415172e54bf3b72c39ce69882b4ca
   shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
   SwiftyGif: 6c3eafd0ce693cad58bb63d2b2fb9bacb8552780
   YubiKit: bde189dbaddc29e41dbda9e2c55ec5a79d38c654
