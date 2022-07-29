@@ -15,7 +15,7 @@ class App extends StatelessWidget with GetItMixin {
         watchOnly((KeyModel keyModel) => keyModel.isKeyInitialised);
     return MaterialApp(
       navigatorKey: get<GlobalKey<NavigatorState>>(),
-      title: 'Yubidrive',
+      title: 'YubiDrive',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         textTheme: textTheme.copyWith(
