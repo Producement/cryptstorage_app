@@ -1,0 +1,1 @@
+Use your YubiKey to encrypt and securely store files. Download and decrypt from any device as long as you have your YubiKey with you.
