@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   testWidgets('smoke test', (WidgetTester tester) async {
+    final valueBeforeTest = ErrorWidget.builder;
     // Build our app and trigger a frame.
     getIt.registerSingleton(GlobalKey<NavigatorState>());
     SharedPreferences.setMockInitialValues({});
@@ -16,5 +17,6 @@ void main() {
     await tester.pumpWidget(App());
 
     expect(find.text('Powered by YubiKey.'), findsOneWidget);
+    ErrorWidget.builder = valueBeforeTest;
   });
 }

@@ -22,10 +22,12 @@ class Onboarding extends StatelessWidget with GetItMixin {
       const AnimatedLock(visible: false),
       Expanded(
           child: Stack(alignment: AlignmentDirectional.topStart, children: [
-        Column(children: const [
-          Heading(title: 'Put a lock on your files.'),
-          SubHeading(title: 'Powered by YubiKey.')
-        ]),
+        Center(
+          child: Column(children: const [
+            Heading(title: 'Put a lock on your files.'),
+            SubHeading(title: 'Powered by YubiKey.')
+          ]),
+        ),
         const Center(child: OnboardingImage()),
       ])),
       Button(
